@@ -1,0 +1,11 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-quick-action-panel header="Contacts Map">
+        <lightning-map
+          map-markers={mapMarkers}
+          title="Map with Markers"
+        ></lightning-map>
+        <lightning-button label="Get only this one" onclick={clickHandler1}></lightning-button>
+        <lightning-button label="Get every contact" onclick={clickHandler2}></lightning-button>
+    </lightning-quick-action-panel>
+</template>
