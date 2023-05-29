@@ -1,26 +1,35 @@
 import { LightningElement, api, wire } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { CloseActionScreenEvent } from 'lightning/actions';
-import { getRecord } from 'lightning/uiRecordApi';
-import MailingCity from '@salesforce/schema/Contact.MailingCity';
-import MailingCountry from '@salesforce/schema/Contact.MailingCountry';
-import MailingPostalCode from '@salesforce/schema/Contact.MailingPostalCode';
-import MailingState from '@salesforce/schema/Contact.MailingState';
-import MailingStreet from '@salesforce/schema/Contact.MailingStreet';
 import getContacts from '@salesforce/apex/ContactController.getContacts';
 
 export default class QuickEditFormExample extends LightningElement {
-
   @api recordId;
-  @api objectApiName;
-  pageToken = null;
-  nextPageToken = null;
-  previousPageToken = null;
   error;
-  displayColumns;
-  listView2 = null;
   contacts;
+  hasRendered;
+  mapMarkers = [];
 
+  // This method is called after the component is rendered.
+  // It sets a timer to check if the contacts data has been loaded.
+  // Once the data is loaded, it calls the setMapForEveryContact method.
+  renderedCallback() {
+    if (this.hasRendered) {
+      return;
+    }
+    this.hasRendered = true;
+    
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    const intervalId = setInterval(() => {
+      console.log('CHECK!!!');
+      if (this.contacts) {
+        clearInterval(intervalId);
+        this.setMapForEveryContact();
+      }
+    }, 100);
+  }
+  
+  // This method is wired to the getContacts Apex method.
+  // It retrieves the contacts data and sets it to the contacts property.
+  // If there is an error, it logs the error to the console.
   @wire(getContacts)
   wiredContacts({ error, data }) {
       if (data) {
@@ -30,36 +39,8 @@ export default class QuickEditFormExample extends LightningElement {
       }
   }
 
-  setListView2() {
-    this.listView2 = this.listView;
-    console.log('this.listView2', this.listView2);
-  }
- 
-  @wire(getRecord, { recordId: '$recordId', fields: [MailingCity, MailingCountry, MailingPostalCode, MailingState, MailingStreet] })
-  record;
-
-  mapMarkers = [];
-  handleSuccess() {
-       // Close the modal window and display a success toast
-       this.dispatchEvent(new CloseActionScreenEvent());
-       this.dispatchEvent(
-           new ShowToastEvent({
-               title: 'Success',
-               message: 'Record updated!',
-               variant: 'success'
-           })
-       );
-  }
-
-  clickHandler1() {
-    console.log('this.contacts', this.contacts);
-    console.log('this.contacts[2].Id', this.contacts[2].Id);
-    console.log('this.contacts[2].Name', this.contacts[2].Name);
-    console.log('this.contacts[2].MailingCity', this.contacts[2].MailingCity);
-    console.log('this.contacts[2].MailingCountry', this.contacts[2].MailingCountry);
-    console.log('this.contacts[2].MailingPostalCode', this.contacts[2].MailingPostalCode);
-    console.log('this.contacts[2].MailingState', this.contacts[2].MailingState);
-    console.log('this.contacts[2].MailingStreet', this.contacts[2].MailingStreet);
+  // This method sets the map markers for the third contact in the contacts array.
+  setMapForThirdContact() {
     this.mapMarkers = [
       {
         location: {
@@ -72,15 +53,11 @@ export default class QuickEditFormExample extends LightningElement {
         title: this.contacts[2].Name,
       }
     ]
-    console.log('this.mapMarkers', this.mapMarkers);
-    console.log('Finished!');
   }
 
-  clickHandler2() {
-    console.log(this.contacts);
+  // This method sets the map markers for every contact in the contacts array.
+  setMapForEveryContact() {
     for (let i = 0; i < this.contacts.length; i++) {
-      console.log('this.contacts', ...[this.contacts[i].MailingCity, this.contacts[i].MailingCountry, this.contacts[i].MailingPostalCode, this.contacts[i].MailingState, this.contacts[i].MailingStreet]);
-      console.log('this.mapMarkers', ...this.mapMarkers);
       this.mapMarkers = [
         ...this.mapMarkers,
         {
