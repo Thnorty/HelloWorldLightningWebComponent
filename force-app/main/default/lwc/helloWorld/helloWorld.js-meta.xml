@@ -15,12 +15,12 @@
     <target>lightning__GlobalAction</target>
     <target>lightningStatic__Email</target>
   </targets>
-  <targetConfigs>
+    <targetConfigs>
         <targetConfig targets="lightning__RecordAction">
-            <objects>
-                <object>Contact</object>
-                <object>Lead</object>
-            </objects>
+            <actionType>ScreenAction</actionType>
+        </targetConfig>
+        <targetConfig targets="lightning__GlobalAction">
+            <actionType>ScreenAction</actionType>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
