@@ -1,7 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import getContacts from '@salesforce/apex/ContactController.getContacts';
 
-export default class QuickEditFormExample extends LightningElement {
+export default class ContactsMap extends LightningElement {
   error;
   contacts;
   hasRendered;
