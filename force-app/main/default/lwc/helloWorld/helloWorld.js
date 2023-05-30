@@ -1,8 +1,7 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, wire } from 'lwc';
 import getContacts from '@salesforce/apex/ContactController.getContacts';
 
 export default class QuickEditFormExample extends LightningElement {
-  @api recordId;
   error;
   contacts;
   hasRendered;
@@ -19,7 +18,6 @@ export default class QuickEditFormExample extends LightningElement {
     
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     const intervalId = setInterval(() => {
-      console.log('CHECK!!!');
       if (this.contacts) {
         clearInterval(intervalId);
         this.setMapForEveryContact();
