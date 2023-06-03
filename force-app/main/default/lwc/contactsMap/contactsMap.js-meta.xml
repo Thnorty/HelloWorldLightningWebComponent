@@ -17,4 +17,12 @@
         <target>lightning__GlobalAction</target>
         <target>lightningStatic__Email</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects>
+                <object>Contact</object>
+                <object>Lead</object>
+            </objects>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

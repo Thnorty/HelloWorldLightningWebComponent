@@ -1,8 +1,13 @@
 <template>
-    <lightning-quick-action-panel header="Contacts Map">
+    <lightning-card title="Contacts Map">
+      <div if:true={loaded}>
         <lightning-map
           map-markers={mapMarkers}
           title="Contacts Map"
         ></lightning-map>
-    </lightning-quick-action-panel>
+      </div>
+      <div if:false={loaded}>
+          <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+      </div>
+    </lightning-card>
 </template>

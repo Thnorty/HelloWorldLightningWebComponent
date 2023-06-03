@@ -4,8 +4,8 @@ import getContacts from '@salesforce/apex/ContactController.getContacts';
 export default class ContactsMap extends LightningElement {
   error;
   contacts;
-  hasRendered;
   mapMarkers = [];
+  loaded = false;
   
   // This method is wired to the getContacts Apex method.
   // It retrieves the contacts data and sets it to the contacts property.
@@ -15,6 +15,7 @@ export default class ContactsMap extends LightningElement {
       if (data) {
           this.contacts = data;
           this.setMapForEveryContact();
+          this.loaded = true;
       } else if (error) {
           console.error(error);
       }
