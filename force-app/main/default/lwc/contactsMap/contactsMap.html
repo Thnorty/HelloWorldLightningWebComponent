@@ -1,13 +1,13 @@
 <template>
-  <lightning-card title="Contacts Map">
-    <div if:true={loaded}>
-      <lightning-map
-        map-markers={mapMarkers}
-        title="Contacts Map"
-      ></lightning-map>
-    </div>
-    <div if:false={loaded}>
-      <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
-    </div>
-  </lightning-card>
+    <lightning-card title="Contacts Map">
+        <div if:true={loaded}>
+            <lightning-map
+                map-markers={mapMarkers}
+                title="Contacts Map"
+            ></lightning-map>
+        </div>
+        <div if:false={loaded}>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </div>
+    </lightning-card>
 </template>
