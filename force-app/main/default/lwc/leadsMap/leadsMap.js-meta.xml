@@ -2,8 +2,8 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>57.0</apiVersion>
     <isExposed>true</isExposed>
-    <masterLabel>Contacts Map</masterLabel>
-    <description>Displays a map of contacts</description>
+    <masterLabel>Leads Map</masterLabel>
+    <description>Displays a map of leads</description>
     <targets>
         <target>lightning__Tab</target>
     </targets>
