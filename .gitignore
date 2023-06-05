@@ -39,10 +39,7 @@ $RECYCLE.BIN/
 # Local environment variables
 .env
 
-# Profiles folder
-force-app/main/default/profiles/
-
-# Metadata field files
+# Unnecessary metadata field files
 force-app/main/default/objects/Contact/fields/AccountId.field-meta.xml
 force-app/main/default/objects/Contact/fields/AssistantName.field-meta.xml
 force-app/main/default/objects/Contact/fields/AssistantPhone.field-meta.xml
