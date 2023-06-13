@@ -1,13 +1,50 @@
 <template>
     <lightning-card title="Contacts Map">
-        <div if:true={loaded}>
-            <lightning-map
-                map-markers={mapMarkers}
-                title="Contacts Map"
-            ></lightning-map>
-        </div>
-        <div if:false={loaded}>
-            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        <div class="slds-var-p-around_medium">
+            <div if:true={loaded}>
+                <div class="slds-grid">
+                    <div class="slds-box slds-size_1-of-4">
+                        <h2 class="slds-text-heading_small">Mark Location:</h2>
+                        <lightning-combobox class="slds-size_small"  label="Shape" value={shape} options={shapeOptions} onchange={handleShapeChange}></lightning-combobox>
+                        <div lwc:if={circle}>
+                            <lightning-input label="Area address" value={address} onchange={handleAddressChange}></lightning-input>
+                            <lightning-input class="slds-size_small" label="Radius (meters)" value={circleRadius} onchange={handleCircleRadiusChange}></lightning-input>
+                        </div>
+                        <div lwc:elseif={rectangle}>
+                            <lightning-input class="slds-size_small" label="North Coordinate:" value={rectangleNorth} onchange={handleRectangleNorthChange}></lightning-input>
+                            <lightning-input class="slds-size_small" label="South Coordinate:" value={rectangleSouth} onchange={handleRectangleSouthChange}></lightning-input>
+                            <lightning-input class="slds-size_small" label="East Coordinate:" value={rectangleEast} onchange={handleRectangleEastChange}></lightning-input>
+                            <lightning-input class="slds-size_small" label="West Coordinate:" value={rectangleWest} onchange={handleRectangleWestChange}></lightning-input>
+                        </div>
+                        <br>
+                        <lightning-button variant="brand" label="Save" onclick={handleSave}></lightning-button>
+                    </div>
+                    <div class="slds-box slds-grid slds-grid_vertical slds-size_1-of-2">
+                        <h2 class="slds-text-heading_small slds-col">Filters (Case Sensitive):</h2>
+                        <div class="slds-col slds-grid slds-gutters">
+                            <lightning-input class="slds-col" label="Name" value={nameFilter} onchange={handleNameFilterChange}></lightning-input>
+                            <lightning-input class="slds-col" label="Email" value={emailFilter} onchange={handleEmailFilterChange}></lightning-input>
+                            <lightning-input class="slds-col" label="Phone" value={phoneFilter} onchange={handlePhoneFilterChange}></lightning-input>
+                            <lightning-input class="slds-col" label="Mobile Phone" value={mobilePhoneFilter} onchange={handleMobilePhoneFilterChange}></lightning-input>
+                            <lightning-input class="slds-col" label="Title" value={titleFilter} onchange={handleTitleFilterChange}></lightning-input>
+                            <lightning-input class="slds-col" label="Lead Source" value={leadSourceFilter} onchange={handleLeadSourceFilterChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-grid slds-var-m-top_small">
+                            <lightning-button class="slds-var-m-right_small" variant="brand" label="Filter" onclick={handleFilter}></lightning-button>
+                            <lightning-button variant="destructive-text" label="Clear Filters" onclick={handleClearFilters}></lightning-button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <lightning-map
+                    map-markers={mapMarkers}
+                    title="Contacts Map"
+                ></lightning-map>
+            </div>
+            <div if:false={loaded}>
+                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+            </div>
         </div>
     </lightning-card>
 </template>
