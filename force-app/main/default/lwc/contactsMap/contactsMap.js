@@ -30,34 +30,18 @@ export default class ContactsMap extends LightningElement {
   wiredContacts({ error, data }) {
       if (data) {
           this.contacts = data;
-          this.setMapForEveryContact();
+          this.handleSave();
           this.loaded = true;
       } else if (error) {
           console.error(error);
       }
   }
 
-  // This method sets the map markers for every contact in the contacts array.
-  setMapForEveryContact() {
-    this.mapMarkers = this.contacts.map(contact => ({
-      location: {
-        City: contact.MailingCity || ' ',
-        Country: contact.MailingCountry || ' ',
-        PostalCode: contact.MailingPostalCode || ' ',
-        State: contact.MailingState || ' ',
-        Street: contact.MailingStreet || ' '
-      },
-      title: contact.Name,
-      description: `<b>Name:</b> ${contact.Name}<br/>
-                    <b>Email:</b> ${contact.Email}<br/>
-                    <b>Phone:</b> ${contact.Phone}<br/>
-                    <b>Mobile Phone:</b> ${contact.MobilePhone}<br/>
-                    <b>Title:</b> ${contact.Title}<br/>
-                    <b>Lead Source:</b> ${contact.LeadSource}`
-    }));
-    this.mapMarkers = [
-      ...this.mapMarkers, ...this.mapShapes
-    ];
+  get shapeOptions() {
+    return [
+      { label: 'Circle', value: 'Circle' },
+      { label: 'Rectangle', value: 'Rectangle' },
+    ]
   }
 
   handleAddressChange(event) {
@@ -120,13 +104,7 @@ export default class ContactsMap extends LightningElement {
     this.leadSourceFilter = event.target.value;
   }
 
-  get shapeOptions() {
-    return [
-      { label: 'Circle', value: 'Circle' },
-      { label: 'Rectangle', value: 'Rectangle' },
-    ]
-  }
-
+  // This method clears the map markers and map shapes arrays.
   handleClearMarker() {
     this.shape = "";
     this.circle = false;
@@ -139,6 +117,7 @@ export default class ContactsMap extends LightningElement {
     this.rectangleWest = 0;
     this.mapShapes = [];
   }
+  // This method clears the filters.
   handleClearFilters() {
     this.nameFilter = '';
     this.emailFilter = '';
@@ -147,7 +126,7 @@ export default class ContactsMap extends LightningElement {
     this.titleFilter = '';
     this.leadSourceFilter = '';
   }
-
+  // This method sets the map.
   handleSave() {
     this.mapMarkers = this.contacts.map(contact => ({
       location: {
@@ -212,8 +191,6 @@ export default class ContactsMap extends LightningElement {
       ];
     }
     
-    this.mapMarkers = [
-      ...this.mapMarkers, ...this.mapShapes
-    ];
+    this.mapMarkers = [...this.mapMarkers, ...this.mapShapes];
   }
 }
