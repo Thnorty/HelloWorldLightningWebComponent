@@ -127,35 +127,28 @@ export default class ContactsMap extends LightningElement {
     ]
   }
 
-  handleSave() {
-    this.mapShapes = [
-      {
-        location: {
-          City: this.address,
-          Country: ' ',
-          PostalCode: ' ',
-          State: ' ',
-          Street: ' '
-        },
-        type: this.circle ? 'Circle' : 'Rectangle',
-        bounds: {
-          north: this.rectangleNorth,
-          south: this.rectangleSouth,
-          east: this.rectangleEast,
-          west: this.rectangleWest
-        },
-        radius: this.circleRadius,
-        strokeColor: '#FFF000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FFF000',
-        fillOpacity: 0.35,
-      }
-    ];
-    this.handleFilter();
+  handleClearMarker() {
+    this.shape = "";
+    this.circle = false;
+    this.rectangle = false;
+    this.address = "";
+    this.circleRadius = 0;
+    this.rectangleNorth = 0;
+    this.rectangleSouth = 0;
+    this.rectangleEast = 0;
+    this.rectangleWest = 0;
+    this.mapShapes = [];
+  }
+  handleClearFilters() {
+    this.nameFilter = '';
+    this.emailFilter = '';
+    this.phoneFilter = '';
+    this.mobilePhoneFilter = '';
+    this.titleFilter = '';
+    this.leadSourceFilter = '';
   }
 
-  handleFilter() {
+  handleSave() {
     this.mapMarkers = this.contacts.map(contact => ({
       location: {
         City: contact.MailingCity || ' ',
@@ -191,18 +184,36 @@ export default class ContactsMap extends LightningElement {
     if (this.leadSourceFilter) {
       this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.leadSourceFilter));
     }
+    
+    if (this.shape.length > 0) {
+      this.mapShapes = [
+        {
+          location: {
+            City: this.address,
+            Country: ' ',
+            PostalCode: ' ',
+            State: ' ',
+            Street: ' '
+          },
+          type: this.circle ? 'Circle' : 'Rectangle',
+          bounds: {
+            north: this.rectangleNorth,
+            south: this.rectangleSouth,
+            east: this.rectangleEast,
+            west: this.rectangleWest
+          },
+          radius: this.circleRadius,
+          strokeColor: '#FFF000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FFF000',
+          fillOpacity: 0.35,
+        }
+      ];
+    }
+    
     this.mapMarkers = [
       ...this.mapMarkers, ...this.mapShapes
     ];
-  }
-
-  handleClearFilters() {
-    this.nameFilter = '';
-    this.emailFilter = '';
-    this.phoneFilter = '';
-    this.mobilePhoneFilter = '';
-    this.titleFilter = '';
-    this.leadSourceFilter = '';
-    this.setMapForEveryContact();
   }
 }
