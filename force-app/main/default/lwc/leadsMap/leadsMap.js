@@ -48,68 +48,57 @@ export default class LeadsMap extends LightningElement {
     ]
   }
   get leadSourceOptions() {
-    return [
-      { value: ''},
-      { label: 'Web', value: 'Web' },
-      { label: 'Phone Inquiry', value: 'Phone Inquiry' },
-      { label: 'Partner Referral', value: 'Partner Referral' },
-      { label: 'Purchased List', value: 'Purchased List' },
-      { label: 'Other', value: 'Other' }
-    ]
+    let leadSourceOptions = [];
+    let leadSourceSet = new Set();
+    leadSourceSet.add(undefined);
+    for (let i = 0; i < this.leads.length; i++) {
+      leadSourceSet.add(this.leads[i].LeadSource);
+    }
+    leadSourceSet.forEach(leadSource => {
+      leadSourceOptions.push({label: leadSource, value: leadSource});
+    }
+    );
+    return leadSourceOptions;
   }
   get industryOptions() {
-    return [
-      { value: ''},
-      { label: 'Agriculture', value: 'Agriculture' },
-      { label: 'Apparel', value: 'Apparel' },
-      { label: 'Banking', value: 'Banking' },
-      { label: 'Biotechnology', value: 'Biotechnology' },
-      { label: 'Chemicals', value: 'Chemicals' },
-      { label: 'Communications', value: 'Communications' },
-      { label: 'Construction', value: 'Construction' },
-      { label: 'Consulting', value: 'Consulting' },
-      { label: 'Education', value: 'Education' },
-      { label: 'Electronics', value: 'Electronics' },
-      { label: 'Energy', value: 'Energy' },
-      { label: 'Engineering', value: 'Engineering' },
-      { label: 'Entertainment', value: 'Entertainment' },
-      { label: 'Environmental', value: 'Environmental' },
-      { label: 'Finance', value: 'Finance' },
-      { label: 'Food & Beverage', value: 'Food & Beverage' },
-      { label: 'Government', value: 'Government' },
-      { label: 'Healthcare', value: 'Healthcare' },
-      { label: 'Hospitality', value: 'Hospitality' },
-      { label: 'Insurance', value: 'Insurance' },
-      { label: 'Machinery', value: 'Machinery' },
-      { label: 'Manufacturing', value: 'Manufacturing' },
-      { label: 'Media', value: 'Media' },
-      { label: 'Not For Profit', value: 'Not For Profit' },
-      { label: 'Recreation', value: 'Recreation' },
-      { label: 'Retail', value: 'Retail' },
-      { label: 'Shipping', value: 'Shipping' },
-      { label: 'Technology', value: 'Technology' },
-      { label: 'Telecommunications', value: 'Telecommunications' },
-      { label: 'Transportation', value: 'Transportation' },
-      { label: 'Utilities', value: 'Utilities' },
-      { label: 'Other', value: 'Other' }
-    ]
+    let industryOptions = [];
+    let industrySet = new Set();
+    industrySet.add(undefined);
+    for (let i = 0; i < this.leads.length; i++) {
+      industrySet.add(this.leads[i].Industry);
+    }
+    industrySet.forEach(industry => {
+      industryOptions.push({label: industry, value: industry});
+    }
+    );
+    return industryOptions;
   }      
   get statusOptions() {
-    return [
-      { value: ''},
-      { label: 'Open - Not Contacted', value: 'Open - Not Contacted' },
-      { label: 'Working - Contacted', value: 'Working - Contacted' },
-      { label: 'Closed - Converted', value: 'Closed - Converted' },
-      { label: 'Closed - Not Converted', value: 'Closed - Not Converted' }
-    ]
+    let statusOptions = [];
+    let statusSet = new Set();
+    statusSet.add(undefined);
+    for (let i = 0; i < this.leads.length; i++) {
+      statusSet.add(this.leads[i].Status);
+    }
+    statusSet.forEach(status => {
+      statusOptions.push({label: status, value: status});
+    }
+    );
+    return statusOptions;
   }
   get ratingOptions() {
-    return [
-      { value: ''},
-      { label: 'Hot', value: 'Hot' },
-      { label: 'Warm', value: 'Warm' },
-      { label: 'Cold', value: 'Cold' },
-    ]
+    let ratingOptions = [];
+    let ratingSet = new Set();
+    ratingSet.add(undefined);
+    for (let i = 0; i < this.leads.length; i++) {
+      ratingSet.add(this.leads[i].Rating);
+    }
+    ratingSet.forEach(rating => {
+      console.log(rating);
+      ratingOptions.push({label: rating, value: rating});
+    }
+    );
+    return ratingOptions;
   }
 
   handleAddressChange(event) {
