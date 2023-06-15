@@ -165,32 +165,49 @@ export default class ContactsMap extends LightningElement {
     }
     
     if (this.shape.length > 0) {
-      this.mapShapes = [
-        {
-          location: {
-            City: this.address,
-            Country: ' ',
-            PostalCode: ' ',
-            State: ' ',
-            Street: ' '
-          },
-          type: this.circle ? 'Circle' : 'Rectangle',
-          bounds: {
-            north: this.rectangleNorth,
-            south: this.rectangleSouth,
-            east: this.rectangleEast,
-            west: this.rectangleWest
-          },
-          radius: this.circleRadius,
-          strokeColor: '#FFF000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FFF000',
-          fillOpacity: 0.35,
-        }
-      ];
+      if (this.circle) {
+        this.mapShapes = [
+          {
+            location: {
+              City: this.address,
+              Country: ' ',
+              PostalCode: ' ',
+              State: ' ',
+              Street: ' '
+            },
+            type: 'Circle',
+            radius: this.circleRadius,
+            strokeColor: '#FFF000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FFF000',
+            fillOpacity: 0.35,
+          }
+        ];
+      }
+      else if (this.rectangle) {
+        this.mapShapes = [
+          {
+            location: {
+              Latitude: '0',
+              Longitude: '0',
+            },
+            type: 'Rectangle',
+            bounds: {
+              north: this.rectangleNorth,
+              south: this.rectangleSouth,
+              east: this.rectangleEast,
+              west: this.rectangleWest
+            },
+            strokeColor: '#FFF000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FFF000',
+            fillOpacity: 0.35,
+          }
+        ];
+      }
     }
-    
     this.mapMarkers = [...this.mapMarkers, ...this.mapShapes];
   }
 }
