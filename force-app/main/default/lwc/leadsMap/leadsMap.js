@@ -4,28 +4,19 @@ import getLeads from '@salesforce/apex/LeadController.getLeads';
 export default class LeadsMap extends LightningElement {
   error;
   leads;
+  mapShape;
   mapMarkers = [];
-  mapShapes = [];
   loaded = false;
-  address = "";
-  shape = "";
-  circle = false;
-  rectangle = false;
+  address = '';
   circleRadius = 0;
-  rectangleNorth = 0;
-  rectangleSouth = 0;
-  rectangleEast = 0;
-  rectangleWest = 0;
-  nameFilter;
-  emailFilter;
-  phoneFilter;
-  mobilePhoneFilter;
-  titleFilter;
-  leadSourceFilter;
-  companyFilter;
-  industryFilter;
-  statusFilter;
-  ratingFilter;
+  nameFilter = '';
+  emailFilter = '';
+  titleFilter = '';
+  leadSourceFilter = '';
+  companyFilter = '';
+  industryFilter = '';
+  statusFilter = '';
+  ratingFilter = '';
   
   // This method is wired to the getLeads Apex method.
   // It retrieves the leads data and sets it to the leads property.
@@ -35,16 +26,15 @@ export default class LeadsMap extends LightningElement {
       if (data) {
           this.leads = data;
           this.handleSave();
-          this.loaded = true;
       } else if (error) {
           console.error(error);
       }
   }
 
-  get shapeOptions() {
+  get unitOptions() {
     return [
-      { label: 'Circle', value: 'Circle' },
-      { label: 'Rectangle', value: 'Rectangle' },
+      { label: 'Km', value: 'km' },
+      { label: 'Miles', value: 'mi' }
     ]
   }
   get leadSourceOptions() {
@@ -56,8 +46,7 @@ export default class LeadsMap extends LightningElement {
     }
     leadSourceSet.forEach(leadSource => {
       leadSourceOptions.push({label: leadSource, value: leadSource});
-    }
-    );
+    });
     return leadSourceOptions;
   }
   get industryOptions() {
@@ -69,8 +58,7 @@ export default class LeadsMap extends LightningElement {
     }
     industrySet.forEach(industry => {
       industryOptions.push({label: industry, value: industry});
-    }
-    );
+    });
     return industryOptions;
   }      
   get statusOptions() {
@@ -82,8 +70,7 @@ export default class LeadsMap extends LightningElement {
     }
     statusSet.forEach(status => {
       statusOptions.push({label: status, value: status});
-    }
-    );
+    });
     return statusOptions;
   }
   get ratingOptions() {
@@ -94,10 +81,8 @@ export default class LeadsMap extends LightningElement {
       ratingSet.add(this.leads[i].Rating);
     }
     ratingSet.forEach(rating => {
-      console.log(rating);
       ratingOptions.push({label: rating, value: rating});
-    }
-    );
+    });
     return ratingOptions;
   }
 
@@ -105,36 +90,12 @@ export default class LeadsMap extends LightningElement {
     this.address = event.target.value;
   }
 
-  handleShapeChange(event) {
-    this.shape = event.target.value;
-    if (this.shape === 'Circle') {
-      this.circle = true;
-      this.rectangle = false;
-    }
-    else if (this.shape === 'Rectangle') {
-      this.circle = false;
-      this.rectangle = true;
-    }
+  handleUnitChange(event) {
+    this.mileOrKm = event.target.value;
   }
 
   handleCircleRadiusChange(event) {
     this.circleRadius = Number(event.target.value);
-  }
-
-  handleRectangleNorthChange(event) {
-    this.rectangleNorth = Number(event.target.value);
-  }
-
-  handleRectangleSouthChange(event) {
-    this.rectangleSouth = Number(event.target.value);
-  }
-
-  handleRectangleEastChange(event) {
-    this.rectangleEast = Number(event.target.value);
-  }
-
-  handleRectangleWestChange(event) {
-    this.rectangleWest = Number(event.target.value);
   }
 
   handleNameFilterChange(event) {
@@ -143,14 +104,6 @@ export default class LeadsMap extends LightningElement {
 
   handleEmailFilterChange(event) {
     this.emailFilter = event.target.value;
-  }
-
-  handlePhoneFilterChange(event) {
-    this.phoneFilter = event.target.value;
-  }
-
-  handleMobilePhoneFilterChange(event) {
-    this.mobilePhoneFilter = event.target.value;
   }
 
   handleTitleFilterChange(event) {
@@ -179,23 +132,14 @@ export default class LeadsMap extends LightningElement {
 
   // This method clears the map markers and map shapes arrays.
   handleClearMarker() {
-    this.shape = "";
-    this.circle = false;
-    this.rectangle = false;
     this.address = "";
     this.circleRadius = 0;
-    this.rectangleNorth = 0;
-    this.rectangleSouth = 0;
-    this.rectangleEast = 0;
-    this.rectangleWest = 0;
-    this.mapShapes = [];
+    this.mapShape = undefined;
   }
   // This method clears the filters.
   handleClearFilters() {
     this.nameFilter = '';
     this.emailFilter = '';
-    this.phoneFilter = '';
-    this.mobilePhoneFilter = '';
     this.titleFilter = '';
     this.leadSourceFilter = '';
     this.companyFilter = '';
@@ -205,7 +149,16 @@ export default class LeadsMap extends LightningElement {
   }
   // This method sets the map.
   handleSave() {
-    this.mapMarkers = this.leads.map(lead => ({
+    this.mapMarkers = this.leads
+    .filter(lead => (lead.Name && lead.Name.includes(this.nameFilter)) || (this.nameFilter === ''))
+    .filter(lead => (lead.Email && lead.Email.includes(this.emailFilter)) || (this.emailFilter === ''))
+    .filter(lead => (lead.Title && lead.Title.includes(this.titleFilter)) || (this.titleFilter === ''))
+    .filter(lead => (lead.LeadSource && lead.LeadSource.includes(this.leadSourceFilter)) || (this.leadSourceFilter === ''))
+    .filter(lead => (lead.Company && lead.Company.includes(this.companyFilter)) || (this.companyFilter === ''))
+    .filter(lead => (lead.Industry && lead.Industry.includes(this.industryFilter)) || (this.industryFilter === ''))
+    .filter(lead => (lead.Status && lead.Status.includes(this.statusFilter)) || (this.statusFilter === ''))
+    .filter(lead => (lead.Rating && lead.Rating.includes(this.ratingFilter)) || (this.ratingFilter === ''))
+    .map(lead => ({
       location: {
         City: lead.City || ' ',
         Country: lead.Country || ' ',
@@ -214,76 +167,46 @@ export default class LeadsMap extends LightningElement {
         Street: lead.Street || ' '
       },
       title: lead.Name,
-      description: `<b>Name:</b> ${lead.Name}<br/>
-                    <b>Email:</b> ${lead.Email}<br/>
-                    <b>Phone:</b> ${lead.Phone}<br/>
-                    <b>Mobile Phone:</b> ${lead.MobilePhone}<br/>
-                    <b>Title:</b> ${lead.Title}<br/>
-                    <b>Lead Source:</b> ${lead.LeadSource}<br/>
-                    <b>Company:</b> ${lead.Company}<br/>
-                    <b>Industry:</b> ${lead.Industry}<br/>
-                    <b>Status:</b> ${lead.Status}<br/>
-                    <b>Rating:</b> ${lead.Rating}`
+      description: `${lead.Name ? `<b>Name:</b> ${lead.Name}<br/>` : ''}
+                    ${lead.Email ? `<b>Email:</b> ${lead.Email}<br/>` : ''}
+                    ${lead.Title ? `<b>Title:</b> ${lead.Title}<br/>` : ''}
+                    ${lead.LeadSource ? `<b>Lead Source:</b> ${lead.LeadSource}<br/>` : ''}
+                    ${lead.Company ? `<b>Company:</b> ${lead.Company}<br/>` : ''}
+                    ${lead.Industry ? `<b>Industry:</b> ${lead.Industry}<br/>` : ''}
+                    ${lead.Status ? `<b>Status:</b> ${lead.Status}<br/>` : ''}
+                    ${lead.Rating ? `<b>Rating:</b> ${lead.Rating}<br/>` : ''}`,
+      mapIcon : {
+          path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+          fillColor: '#CF3476',
+          fillOpacity: 0.5,
+          strokeWeight: 1,
+          scale: 0.10,
+      }
     }));
-
-    if (this.nameFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.title.includes(this.nameFilter));
-    }
-    if (this.emailFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.emailFilter));
-    }
-    if (this.phoneFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.phoneFilter));
-    }
-    if (this.mobilePhoneFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.mobilePhoneFilter));
-    }
-    if (this.titleFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.titleFilter));
-    }
-    if (this.leadSourceFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.leadSourceFilter));
-    }
-    if (this.companyFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.companyFilter));
-    }
-    if (this.industryFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.industryFilter));
-    }
-    if (this.statusFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.statusFilter));
-    }
-    if (this.ratingFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.ratingFilter));
+    
+    if (this.circleRadius > 0) {
+      this.mapShape = {
+        location: {
+          City: this.address,
+          Country: ' ',
+          PostalCode: ' ',
+          State: ' ',
+          Street: ' '
+        },
+        type: 'Circle',
+        radius: this.mileOrKm === 'km' ? this.circleRadius * 1000 : this.circleRadius * 1609.34,
+        strokeColor: '#FFF000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FFF000',
+        fillOpacity: 0.35,
+      }
     }
     
-    if (this.shape.length > 0) {
-      this.mapShapes = [
-        {
-          location: {
-            City: this.address,
-            Country: ' ',
-            PostalCode: ' ',
-            State: ' ',
-            Street: ' '
-          },
-          type: this.circle ? 'Circle' : 'Rectangle',
-          bounds: {
-            north: this.rectangleNorth,
-            south: this.rectangleSouth,
-            east: this.rectangleEast,
-            west: this.rectangleWest
-          },
-          radius: this.circleRadius,
-          strokeColor: '#FFF000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FFF000',
-          fillOpacity: 0.35,
-        }
-      ];
+    if (this.mapShape) {
+      this.mapMarkers.push(this.mapShape);
     }
     
-    this.mapMarkers = [...this.mapMarkers, ...this.mapShapes];
+    this.loaded = true;
   }
 }

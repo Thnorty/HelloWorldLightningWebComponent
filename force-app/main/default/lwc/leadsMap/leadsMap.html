@@ -4,17 +4,11 @@
             <div class="slds-grid">
                 <div class="slds-grid_vertical slds-col slds-size_1-of-8">
                     <div class="slds-box slds-col">
-                        <h2 class="slds-text-heading_small">Marker Location</h2>
-                        <lightning-combobox label="Shape" value={shape} options={shapeOptions} onchange={handleShapeChange}></lightning-combobox>
-                        <div lwc:if={circle}>
-                            <lightning-input label="Area address" value={address} onchange={handleAddressChange}></lightning-input>
-                            <lightning-input label="Radius (meters)" value={circleRadius} onchange={handleCircleRadiusChange}></lightning-input>
-                        </div>
-                        <div lwc:elseif={rectangle}>
-                            <lightning-input label="North Coordinate" value={rectangleNorth} onchange={handleRectangleNorthChange}></lightning-input>
-                            <lightning-input label="South Coordinate" value={rectangleSouth} onchange={handleRectangleSouthChange}></lightning-input>
-                            <lightning-input label="East Coordinate" value={rectangleEast} onchange={handleRectangleEastChange}></lightning-input>
-                            <lightning-input label="West Coordinate" value={rectangleWest} onchange={handleRectangleWestChange}></lightning-input>
+                        <h2 class="slds-text-heading_small">Circle Area</h2>
+                        <lightning-input label="Area address" value={address} onchange={handleAddressChange}></lightning-input>
+                        <div class="slds-grid slds-gutters_xx-small">
+                            <lightning-input class="slds-col" label="Radius" value={circleRadius} onchange={handleCircleRadiusChange}></lightning-input>
+                            <lightning-combobox class="slds-col slds-size_1-of-2" label="Unit" options={unitOptions} value={mileOrKm} onchange={handleUnitChange}></lightning-combobox>
                         </div>
                         <br>
                         <lightning-button variant="destructive-text" label="Clear" onclick={handleClearMarker}></lightning-button>
@@ -24,8 +18,6 @@
                         <div class="slds-col">
                             <lightning-input label="Name" value={nameFilter} onchange={handleNameFilterChange}></lightning-input>
                             <lightning-input label="Email" value={emailFilter} onchange={handleEmailFilterChange}></lightning-input>
-                            <lightning-input label="Phone" value={phoneFilter} onchange={handlePhoneFilterChange}></lightning-input>
-                            <lightning-input label="Mobile Phone" value={mobilePhoneFilter} onchange={handleMobilePhoneFilterChange}></lightning-input>
                             <lightning-input label="Title" value={titleFilter} onchange={handleTitleFilterChange}></lightning-input>
                             <lightning-combobox label="Lead Source" value={leadSourceFilter} options={leadSourceOptions} onchange={handleLeadSourceFilterChange}></lightning-combobox>
                             <lightning-input label="Comapny" value={companyFilter} onchange={handleCompanyFilterChange}></lightning-input>

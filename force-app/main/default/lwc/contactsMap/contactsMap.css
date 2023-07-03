@@ -1,0 +1,32 @@
+.list-element:hover {
+    background-color: #cfcece;
+    cursor: pointer;
+}
+.list-element {
+    border: 2px solid #d8dde6;
+    border-radius: 5px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+.info, .list {
+    position: absolute;
+    max-height: 600px;
+}
+.info {
+    border-radius: 5px;
+    height: 600px;
+    width: fit-content;
+    transition: opacity 1s;
+}
+.list {
+    transition: opacity 1s;
+}
+
+.info.hide {
+    opacity: 0;
+}
+.list.hide {
+    opacity: 0;
+}

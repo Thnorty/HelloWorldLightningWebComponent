@@ -4,24 +4,19 @@ import getContacts from '@salesforce/apex/ContactController.getContacts';
 export default class ContactsMap extends LightningElement {
   error;
   contacts;
+  mapShape;
   mapMarkers = [];
-  mapShapes = [];
   loaded = false;
   address = "";
-  shape = "";
-  circle = false;
-  rectangle = false;
   circleRadius = 0;
-  rectangleNorth = 0;
-  rectangleSouth = 0;
-  rectangleEast = 0;
-  rectangleWest = 0;
-  nameFilter;
-  emailFilter;
-  phoneFilter;
-  mobilePhoneFilter;
-  titleFilter;
-  leadSourceFilter;
+  nameFilter = '';
+  emailFilter = '';
+  titleFilter = '';
+  leadSourceFilter = '';
+  mileOrKm = 'km';
+  selectedMarkerValue = '';
+  markerList;
+  markerInfo;
   
   // This method is wired to the getContacts Apex method.
   // It retrieves the contacts data and sets it to the contacts property.
@@ -31,53 +26,55 @@ export default class ContactsMap extends LightningElement {
       if (data) {
           this.contacts = data;
           this.handleSave();
-          this.loaded = true;
       } else if (error) {
           console.error(error);
       }
   }
-
-  get shapeOptions() {
+  
+  get unitOptions() {
     return [
-      { label: 'Circle', value: 'Circle' },
-      { label: 'Rectangle', value: 'Rectangle' },
+      { label: 'Km', value: 'km' },
+      { label: 'Miles', value: 'mi' }
     ]
+  }
+  get leadSourceOptions() {
+    let leadSourceOptions = [];
+    let leadSourceSet = new Set();
+    leadSourceSet.add(undefined);
+    for (let i = 0; i < this.contacts.length; i++) {
+      leadSourceSet.add(this.contacts[i].LeadSource);
+    }
+    leadSourceSet.forEach(leadSource => {
+      leadSourceOptions.push({label: leadSource, value: leadSource});
+    });
+    return leadSourceOptions;
+  }
+
+  handleMarkerSelect(event) {
+    this.selectedMarkerValue = event.target.selectedMarkerValue;
+    console.log('selectedMarkerValue: ' + this.selectedMarkerValue);
+  }
+  
+  handleListElementClick(event) {
+    const value = event.currentTarget.getAttribute('data-id');
+    this.selectedMarkerValue = value;
+    console.log('selectedMarkerValue: ' + this.selectedMarkerValue);
+    this.markerInfo = this.template.querySelector('.info');
+    this.markerInfo.classList.toggle('hide');
+    this.markerList = this.template.querySelector('.list');
+    this.markerList.classList.toggle('hide');
+  }
+  
+  handleUnitChange(event) {
+    this.mileOrKm = event.target.value;
   }
 
   handleAddressChange(event) {
     this.address = event.target.value;
   }
 
-  handleShapeChange(event) {
-    this.shape = event.target.value;
-    if (this.shape === 'Circle') {
-      this.circle = true;
-      this.rectangle = false;
-    }
-    else if (this.shape === 'Rectangle') {
-      this.circle = false;
-      this.rectangle = true;
-    }
-  }
-
   handleCircleRadiusChange(event) {
     this.circleRadius = Number(event.target.value);
-  }
-
-  handleRectangleNorthChange(event) {
-    this.rectangleNorth = Number(event.target.value);
-  }
-
-  handleRectangleSouthChange(event) {
-    this.rectangleSouth = Number(event.target.value);
-  }
-
-  handleRectangleEastChange(event) {
-    this.rectangleEast = Number(event.target.value);
-  }
-
-  handleRectangleWestChange(event) {
-    this.rectangleWest = Number(event.target.value);
   }
 
   handleNameFilterChange(event) {
@@ -86,14 +83,6 @@ export default class ContactsMap extends LightningElement {
 
   handleEmailFilterChange(event) {
     this.emailFilter = event.target.value;
-  }
-
-  handlePhoneFilterChange(event) {
-    this.phoneFilter = event.target.value;
-  }
-
-  handleMobilePhoneFilterChange(event) {
-    this.mobilePhoneFilter = event.target.value;
   }
 
   handleTitleFilterChange(event) {
@@ -106,108 +95,67 @@ export default class ContactsMap extends LightningElement {
 
   // This method clears the map markers and map shapes arrays.
   handleClearMarker() {
-    this.shape = "";
-    this.circle = false;
-    this.rectangle = false;
     this.address = "";
     this.circleRadius = 0;
-    this.rectangleNorth = 0;
-    this.rectangleSouth = 0;
-    this.rectangleEast = 0;
-    this.rectangleWest = 0;
-    this.mapShapes = [];
+    this.mapShape = undefined;
   }
   // This method clears the filters.
   handleClearFilters() {
     this.nameFilter = '';
     this.emailFilter = '';
-    this.phoneFilter = '';
-    this.mobilePhoneFilter = '';
     this.titleFilter = '';
     this.leadSourceFilter = '';
   }
   // This method sets the map.
   handleSave() {
-    this.mapMarkers = this.contacts.map(contact => ({
-      location: {
-        City: contact.MailingCity || ' ',
-        Country: contact.MailingCountry || ' ',
-        PostalCode: contact.MailingPostalCode || ' ',
-        State: contact.MailingState || ' ',
-        Street: contact.MailingStreet || ' '
-      },
-      title: contact.Name,
-      description: `<b>Name:</b> ${contact.Name}<br/>
-                    <b>Email:</b> ${contact.Email}<br/>
-                    <b>Phone:</b> ${contact.Phone}<br/>
-                    <b>Mobile Phone:</b> ${contact.MobilePhone}<br/>
-                    <b>Title:</b> ${contact.Title}<br/>
-                    <b>Lead Source:</b> ${contact.LeadSource}`
-    }));
+    this.mapMarkers = this.contacts
+      .filter(contact => (contact.Name && contact.Name.includes(this.nameFilter)) || (this.nameFilter === ''))
+      .filter(contact => (contact.Email && contact.Email.includes(this.emailFilter)) || (this.emailFilter === ''))
+      .filter(contact => (contact.Title && contact.Title.includes(this.titleFilter)) || (this.titleFilter === ''))
+      .filter(contact => (contact.LeadSource && contact.LeadSource.includes(this.leadSourceFilter)) || (this.leadSourceFilter === ''))
+      .map(contact => ({
+        location: {
+          City: contact.MailingCity || ' ',
+          Country: contact.MailingCountry || ' ',
+          PostalCode: contact.MailingPostalCode || ' ',
+          State: contact.MailingState || ' ',
+          Street: contact.MailingStreet || ' '
+        },
+        value: contact.Name + ' - ' + contact.Email + " - " + contact.Phone,
+        mapIcon : {
+            path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z M50,10 a 40,40 0 1,1 0,80 a 40,40 0 1,1 0,-80',
+            fillColor: '#CF3476',
+            fillOpacity: 1,
+            strokeWeight: 1,
+            scale: 0.10,
+            anchor: {x: 122.5, y: 115}
+        },
+        id: contact.Id
+      }));
+    
+    if (this.circleRadius > 0) {
+      this.mapShape = {
+        location: {
+          City: this.address,
+          Country: ' ',
+          PostalCode: ' ',
+          State: ' ',
+          Street: ' '
+        },
+        type: 'Circle',
+        radius: this.mileOrKm === 'km' ? this.circleRadius * 1000 : this.circleRadius * 1609.34,
+        strokeColor: '#FFF000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FFF000',
+        fillOpacity: 0.35,
+      }
+    }
 
-    if (this.nameFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.title.includes(this.nameFilter));
-    }
-    if (this.emailFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.emailFilter));
-    }
-    if (this.phoneFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.phoneFilter));
-    }
-    if (this.mobilePhoneFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.mobilePhoneFilter));
-    }
-    if (this.titleFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.titleFilter));
-    }
-    if (this.leadSourceFilter) {
-      this.mapMarkers = this.mapMarkers.filter(marker => marker.description.includes(this.leadSourceFilter));
+    if (this.mapShape) {
+      this.mapMarkers.push(this.mapShape);
     }
     
-    if (this.shape.length > 0) {
-      if (this.circle) {
-        this.mapShapes = [
-          {
-            location: {
-              City: this.address,
-              Country: ' ',
-              PostalCode: ' ',
-              State: ' ',
-              Street: ' '
-            },
-            type: 'Circle',
-            radius: this.circleRadius,
-            strokeColor: '#FFF000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FFF000',
-            fillOpacity: 0.35,
-          }
-        ];
-      }
-      else if (this.rectangle) {
-        this.mapShapes = [
-          {
-            location: {
-              Latitude: '0',
-              Longitude: '0',
-            },
-            type: 'Rectangle',
-            bounds: {
-              north: this.rectangleNorth,
-              south: this.rectangleSouth,
-              east: this.rectangleEast,
-              west: this.rectangleWest
-            },
-            strokeColor: '#FFF000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FFF000',
-            fillOpacity: 0.35,
-          }
-        ];
-      }
-    }
-    this.mapMarkers = [...this.mapMarkers, ...this.mapShapes];
+    this.loaded = true;
   }
 }
