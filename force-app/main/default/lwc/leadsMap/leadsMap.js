@@ -17,6 +17,10 @@ export default class LeadsMap extends LightningElement {
   industryFilter = '';
   statusFilter = '';
   ratingFilter = '';
+  mileOrKm = 'km';
+  selectedMarkerValue = '';
+  markerList;
+  markerInfo;
   
   // This method is wired to the getLeads Apex method.
   // It retrieves the leads data and sets it to the leads property.
@@ -86,12 +90,32 @@ export default class LeadsMap extends LightningElement {
     return ratingOptions;
   }
 
-  handleAddressChange(event) {
-    this.address = event.target.value;
+  handleCloseInfo() {
+    this.markerList = this.template.querySelector('.list');
+    this.markerInfo = this.template.querySelector('.info');
+
+    this.markerList.classList.remove('fade-out');
+    this.markerInfo.classList.remove('fade-in');
+    this.markerInfo.classList.add('hide');
+  }
+
+  handleMarkerSelect(event) {
+    this.selectedMarkerValue = event.target.selectedMarkerValue;
+    this.updateMarkerInfo(this.selectedMarkerValue);
+  }
+  
+  handleListElementClick(event) {
+    const value = event.currentTarget.getAttribute('data-id');
+    this.selectedMarkerValue = value;
+    this.updateMarkerInfo(this.selectedMarkerValue);
   }
 
   handleUnitChange(event) {
     this.mileOrKm = event.target.value;
+  }
+
+  handleAddressChange(event) {
+    this.address = event.target.value;
   }
 
   handleCircleRadiusChange(event) {
@@ -166,7 +190,8 @@ export default class LeadsMap extends LightningElement {
         State: lead.State || ' ',
         Street: lead.Street || ' '
       },
-      title: lead.Name,
+      value: lead.Name + ' - ' + lead.Email + " - " + lead.Phone,
+      name: lead.Name,
       description: `${lead.Name ? `<b>Name:</b> ${lead.Name}<br/>` : ''}
                     ${lead.Email ? `<b>Email:</b> ${lead.Email}<br/>` : ''}
                     ${lead.Title ? `<b>Title:</b> ${lead.Title}<br/>` : ''}
@@ -208,5 +233,36 @@ export default class LeadsMap extends LightningElement {
     }
     
     this.loaded = true;
+  }
+
+  updateMarkerInfo(infoText) {
+    const markerInfoName = this.template.querySelector('.marker-info-name');
+    const markerInfoEmail = this.template.querySelector('.marker-info-email');
+    const markerInfoPhone = this.template.querySelector('.marker-info-phone');
+    const markerIconPath = this.template.querySelector('.marker-icon-path');
+
+    markerInfoName.textContent = infoText.split(' - ')[0];
+    markerInfoEmail.textContent = infoText.split(' - ')[1];
+    markerInfoPhone.textContent = infoText.split(' - ')[2];
+    
+    for (let i = 0; i < this.mapMarkers.length; i++) {
+      if (this.mapMarkers[i].value === infoText) {
+        markerIconPath.setAttribute('d', this.mapMarkers[i].mapIcon.path);
+        markerIconPath.setAttribute('fill', this.mapMarkers[i].mapIcon.fillColor);
+        markerIconPath.setAttribute('fill-opacity', this.mapMarkers[i].mapIcon.fillOpacity);
+        markerIconPath.setAttribute('stroke', this.mapMarkers[i].mapIcon.strokeColor);
+        markerIconPath.setAttribute('stroke-opacity', this.mapMarkers[i].mapIcon.strokeOpacity);
+        markerIconPath.setAttribute('stroke-width', this.mapMarkers[i].mapIcon.strokeWeight);
+        markerIconPath.setAttribute('transform', 'scale(0.8)');
+        break;
+      }
+    }
+
+    this.markerList = this.template.querySelector('.list');
+    this.markerInfo = this.template.querySelector('.info');
+
+    this.markerList.classList.add('fade-out');
+    this.markerInfo.classList.remove('hide');
+    this.markerInfo.classList.add('fade-in');
   }
 }
