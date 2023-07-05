@@ -56,7 +56,9 @@
                             </template>
                         </div>
                         <div class="slds-box slds-size_1-of-5 slds-is-absolute info hide">
-                            <lightning-button-icon class="slds-float_right" icon-name="utility:close" aria-label="Close" onclick={handleCloseInfo}></lightning-button-icon>
+                            <lightning-button-icon class="slds-float_right" icon-name="utility:close" onclick={handleCloseInfo}>
+                                <label>Close</label>
+                            </lightning-button-icon>
                             <div class="slds-box" style="font-size: large;">
                                 <svg class="slds-align_absolute-center slds-var-m-top_xx-large slds-var-m-bottom_xx-large" width="200" height="200">
                                     <path class="marker-icon-path"></path>
