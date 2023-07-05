@@ -50,19 +50,26 @@ export default class ContactsMap extends LightningElement {
     return leadSourceOptions;
   }
 
+  handleCloseInfo() {
+    this.markerList = this.template.querySelector('.list');
+    this.markerInfo = this.template.querySelector('.info');
+
+    this.markerList.classList.remove('fade-out');
+    this.markerInfo.classList.remove('fade-in');
+    this.markerInfo.classList.add('hide');
+  }
+
   handleMarkerSelect(event) {
+    // TODO: Scroll into view
+
     this.selectedMarkerValue = event.target.selectedMarkerValue;
-    console.log('selectedMarkerValue: ' + this.selectedMarkerValue);
+    this.updateMarkerInfo(this.selectedMarkerValue);
   }
   
   handleListElementClick(event) {
     const value = event.currentTarget.getAttribute('data-id');
     this.selectedMarkerValue = value;
-    console.log('selectedMarkerValue: ' + this.selectedMarkerValue);
-    this.markerInfo = this.template.querySelector('.info');
-    this.markerInfo.classList.toggle('hide');
-    this.markerList = this.template.querySelector('.list');
-    this.markerList.classList.toggle('hide');
+    this.updateMarkerInfo(this.selectedMarkerValue);
   }
   
   handleUnitChange(event) {
@@ -122,6 +129,7 @@ export default class ContactsMap extends LightningElement {
           Street: contact.MailingStreet || ' '
         },
         value: contact.Name + ' - ' + contact.Email + " - " + contact.Phone,
+        name: contact.Name,
         mapIcon : {
             path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z M50,10 a 40,40 0 1,1 0,80 a 40,40 0 1,1 0,-80',
             fillColor: '#CF3476',
@@ -157,5 +165,17 @@ export default class ContactsMap extends LightningElement {
     }
     
     this.loaded = true;
+  }
+
+  updateMarkerInfo(infoText) {
+    const markerInfo = this.template.querySelector('.marker-info');
+    markerInfo.textContent = infoText;
+    
+    this.markerList = this.template.querySelector('.list');
+    this.markerInfo = this.template.querySelector('.info');
+
+    this.markerList.classList.add('fade-out');
+    this.markerInfo.classList.remove('hide');
+    this.markerInfo.classList.add('fade-in');
   }
 }

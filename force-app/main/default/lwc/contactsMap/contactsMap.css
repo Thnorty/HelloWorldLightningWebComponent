@@ -7,26 +7,28 @@
     border-radius: 5px;
     margin-top: 4px;
     margin-bottom: 4px;
-    display: flex;
-    align-items: center;
 }
 .info, .list {
-    position: absolute;
-    max-height: 600px;
+    height: 600px;
 }
 .info {
     border-radius: 5px;
-    height: 600px;
-    width: fit-content;
     transition: opacity 1s;
 }
 .list {
     transition: opacity 1s;
 }
 
-.info.hide {
-    opacity: 0;
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
 }
-.list.hide {
-    opacity: 0;
+
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
+}
+
+.hide {
+  display: none;
 }

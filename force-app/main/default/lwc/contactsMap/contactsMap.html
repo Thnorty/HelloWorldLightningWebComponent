@@ -38,18 +38,19 @@
                         style="max-height: 600px;">
                     </lightning-map>
                     <div class="slds-col slds-size_1-of-4">
-                        <div class="slds-box info hide">
-                            <p>FDASIFJDAS IOG DSGNSDGHSD HJFDSOFHOI SDNFGSDUHGD SNSUIFSDOU GBIODSP</p>
-                        </div>
-                        <div class="slds-grid slds-grid_vertical slds-box slds-scrollable_y list">
+                        <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-5 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
-                                <div key={mapMarker.id} class="slds-grid slds-col list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
+                                <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
                                     <svg width="24.5" height="23">
                                         <path d={mapMarker.mapIcon.path} fill={mapMarker.mapIcon.fillColor} transform="scale(0.1)"></path>
                                     </svg>
-                                    <p class="slds-var-m-left_medium">{mapMarker.value}</p>
+                                    <p class="slds-var-m-left_medium">{mapMarker.name}</p>
                                 </div>
                             </template>
+                        </div>
+                        <div class="slds-box slds-size_1-of-5 slds-is-absolute info hide">
+                            <lightning-button-icon icon-name="utility:close" onclick={handleCloseInfo}></lightning-button-icon>
+                            <p class="marker-info"></p>
                         </div>
                     </div>
                 </div>
