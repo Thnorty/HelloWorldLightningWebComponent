@@ -34,7 +34,7 @@ export default class ContactsMap extends LightningElement {
   get unitOptions() {
     return [
       { label: 'Km', value: 'km' },
-      { label: 'Miles', value: 'mi' }
+      { label: 'Mi', value: 'mi' }
     ]
   }
   get leadSourceOptions() {
