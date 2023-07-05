@@ -34,23 +34,40 @@
                         title="Contacts Map"
                         onmarkerselect={handleMarkerSelect}
                         selected-marker-value={selectedMarkerValue}
-                        list-view="hidden"
-                        style="max-height: 600px;">
+                        list-view="hidden">
                     </lightning-map>
                     <div class="slds-col slds-size_1-of-4">
                         <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-5 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
                                 <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
                                     <svg width="24.5" height="23">
-                                        <path d={mapMarker.mapIcon.path} fill={mapMarker.mapIcon.fillColor} transform="scale(0.1)"></path>
+                                        <path
+                                            d={mapMarker.mapIcon.path}
+                                            fill={mapMarker.mapIcon.fillColor}
+                                            fill-opacity={mapMarker.mapIcon.fillOpacity}
+                                            stroke={mapMarker.mapIcon.strokeColor}
+                                            stroke-opacity={mapMarker.mapIcon.strokeOpacity}
+                                            stroke-width={mapMarker.mapIcon.strokeWeight}
+                                            transform="scale(0.1)">
+                                        </path>
                                     </svg>
                                     <p class="slds-var-m-left_medium">{mapMarker.name}</p>
                                 </div>
                             </template>
                         </div>
                         <div class="slds-box slds-size_1-of-5 slds-is-absolute info hide">
-                            <lightning-button-icon icon-name="utility:close" onclick={handleCloseInfo}></lightning-button-icon>
-                            <p class="marker-info"></p>
+                            <lightning-button-icon class="slds-float_right" icon-name="utility:close" aria-label="Close" onclick={handleCloseInfo}></lightning-button-icon>
+                            <div class="slds-box" style="font-size: large;">
+                                <svg class="slds-align_absolute-center slds-var-m-top_xx-large slds-var-m-bottom_xx-large" width="200" height="200">
+                                    <path class="marker-icon-path"></path>
+                                </svg>
+                                <p><b>Name: </b></p>
+                                <p class="marker-info-name"></p>
+                                <p><b>Email: </b></p>
+                                <p class="marker-info-email"></p>
+                                <p><b>Phone: </b></p>
+                                <p class="marker-info-phone"></p>
+                            </div>
                         </div>
                     </div>
                 </div>

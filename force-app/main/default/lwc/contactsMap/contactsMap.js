@@ -60,8 +60,6 @@ export default class ContactsMap extends LightningElement {
   }
 
   handleMarkerSelect(event) {
-    // TODO: Scroll into view
-
     this.selectedMarkerValue = event.target.selectedMarkerValue;
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
@@ -133,7 +131,9 @@ export default class ContactsMap extends LightningElement {
         mapIcon : {
             path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z M50,10 a 40,40 0 1,1 0,80 a 40,40 0 1,1 0,-80',
             fillColor: '#CF3476',
-            fillOpacity: 1,
+            fillOpacity: 0.5,
+            strokeColor: '#000000',
+            strokeOpacity: 1,
             strokeWeight: 1,
             scale: 0.10,
             anchor: {x: 122.5, y: 115}
@@ -168,9 +168,28 @@ export default class ContactsMap extends LightningElement {
   }
 
   updateMarkerInfo(infoText) {
-    const markerInfo = this.template.querySelector('.marker-info');
-    markerInfo.textContent = infoText;
+    const markerInfoName = this.template.querySelector('.marker-info-name');
+    const markerInfoEmail = this.template.querySelector('.marker-info-email');
+    const markerInfoPhone = this.template.querySelector('.marker-info-phone');
+    const markerIconPath = this.template.querySelector('.marker-icon-path');
+
+    markerInfoName.textContent = infoText.split(' - ')[0];
+    markerInfoEmail.textContent = infoText.split(' - ')[1];
+    markerInfoPhone.textContent = infoText.split(' - ')[2];
     
+    for (let i = 0; i < this.mapMarkers.length; i++) {
+      if (this.mapMarkers[i].value === infoText) {
+        markerIconPath.setAttribute('d', this.mapMarkers[i].mapIcon.path);
+        markerIconPath.setAttribute('fill', this.mapMarkers[i].mapIcon.fillColor);
+        markerIconPath.setAttribute('fill-opacity', this.mapMarkers[i].mapIcon.fillOpacity);
+        markerIconPath.setAttribute('stroke', this.mapMarkers[i].mapIcon.strokeColor);
+        markerIconPath.setAttribute('stroke-opacity', this.mapMarkers[i].mapIcon.strokeOpacity);
+        markerIconPath.setAttribute('stroke-width', this.mapMarkers[i].mapIcon.strokeWeight);
+        markerIconPath.setAttribute('transform', 'scale(0.8)');
+        break;
+      }
+    }
+
     this.markerList = this.template.querySelector('.list');
     this.markerInfo = this.template.querySelector('.info');
 
