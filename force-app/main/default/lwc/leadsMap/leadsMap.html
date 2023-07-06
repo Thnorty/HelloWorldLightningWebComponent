@@ -38,13 +38,14 @@
                         title="Leads Map"
                         onmarkerselect={handleMarkerSelect}
                         selected-marker-value={selectedMarkerValue}
+                        center={mapCenter}
                         list-view="hidden">
                     </lightning-map>
                     <div class="slds-col slds-size_1-of-4">
                         <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-5 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
                                 <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
-                                    <svg width="24.5" height="23">
+                                    <svg width="25" height="25">
                                         <path
                                             d={mapMarker.mapIcon.path}
                                             fill={mapMarker.mapIcon.fillColor}
@@ -64,7 +65,7 @@
                                 <label>Close</label>
                             </lightning-button-icon>
                             <div class="slds-box" style="font-size: large;">
-                                <svg class="slds-align_absolute-center slds-var-m-top_xx-large slds-var-m-bottom_xx-large" width="200" height="200">
+                                <svg class="slds-align_absolute-center slds-var-m-top_xx-large slds-var-m-bottom_xx-large" width="250" height="250">
                                     <path class="marker-icon-path"></path>
                                 </svg>
                                 <p><b>Name: </b></p>

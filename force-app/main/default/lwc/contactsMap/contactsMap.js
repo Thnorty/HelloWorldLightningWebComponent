@@ -15,6 +15,13 @@ export default class ContactsMap extends LightningElement {
   leadSourceFilter = '';
   mileOrKm = 'km';
   selectedMarkerValue = '';
+  mapCenter = {
+    City: '',
+    Country: '',
+    PostalCode: '',
+    State: '',
+    Street: ''
+  };
   markerList;
   markerInfo;
   
@@ -57,16 +64,50 @@ export default class ContactsMap extends LightningElement {
     this.markerList.classList.remove('fade-out');
     this.markerInfo.classList.remove('fade-in');
     this.markerInfo.classList.add('hide');
+
+    this.selectedMarkerValue = '';
   }
 
   handleMarkerSelect(event) {
     this.selectedMarkerValue = event.target.selectedMarkerValue;
+    
+    for (let i = 0; i < this.mapMarkers.length; i++) {
+      if (this.mapMarkers[i].value === this.selectedMarkerValue) {
+        this.mapCenter = {
+          location: {
+            City: this.mapMarkers[i].location.City,
+            Country: this.mapMarkers[i].location.Country,
+            PostalCode: this.mapMarkers[i].location.PostalCode,
+            State: this.mapMarkers[i].location.State,
+            Street: this.mapMarkers[i].location.Street
+          }
+        }
+        break;
+      }
+    }
+
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
   
   handleListElementClick(event) {
     const value = event.currentTarget.getAttribute('data-id');
     this.selectedMarkerValue = value;
+    
+    for (let i = 0; i < this.mapMarkers.length; i++) {
+      if (this.mapMarkers[i].value === this.selectedMarkerValue) {
+        this.mapCenter = {
+          location: {
+            City: this.mapMarkers[i].location.City,
+            Country: this.mapMarkers[i].location.Country,
+            PostalCode: this.mapMarkers[i].location.PostalCode,
+            State: this.mapMarkers[i].location.State,
+            Street: this.mapMarkers[i].location.Street
+          }
+        }
+        break;
+      }
+    }
+
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
   
@@ -129,14 +170,13 @@ export default class ContactsMap extends LightningElement {
         value: contact.Name + ' - ' + contact.Email + " - " + contact.Phone,
         name: contact.Name,
         mapIcon : {
-            path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z M50,10 a 40,40 0 1,1 0,80 a 40,40 0 1,1 0,-80',
-            fillColor: '#CF3476',
-            fillOpacity: 0.5,
+            path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+            fillColor: getRandomColor(),
+            fillOpacity: 0.8,
             strokeColor: '#000000',
             strokeOpacity: 1,
             strokeWeight: 1,
-            scale: 0.10,
-            anchor: {x: 122.5, y: 115}
+            scale: 0.10
         },
         id: contact.Id
       }));
@@ -152,11 +192,11 @@ export default class ContactsMap extends LightningElement {
         },
         type: 'Circle',
         radius: this.mileOrKm === 'km' ? this.circleRadius * 1000 : this.circleRadius * 1609.34,
+        fillColor: '#FFF000',
+        fillOpacity: 0.35,
         strokeColor: '#FFF000',
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#FFF000',
-        fillOpacity: 0.35,
       }
     }
 
@@ -197,4 +237,11 @@ export default class ContactsMap extends LightningElement {
     this.markerInfo.classList.remove('hide');
     this.markerInfo.classList.add('fade-in');
   }
+}
+
+function getRandomColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  return `rgb(${r}, ${g}, ${b})`;
 }
