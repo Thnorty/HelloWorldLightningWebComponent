@@ -95,9 +95,6 @@ export default class ContactsMap extends LightningElement {
     if (filterMenu.classList.contains('hide')) {
       areaMenu.classList.add('hide');
       filterMenu.classList.remove('hide');
-
-      let map = this.template.querySelector('lightning-map');
-      filterMenu.style.height = `${map.offsetHeight}px`;
     } else {
       filterMenu.classList.add('hide');
     }
@@ -110,9 +107,6 @@ export default class ContactsMap extends LightningElement {
     if (areaMenu.classList.contains('hide')) {
       filterMenu.classList.add('hide');
       areaMenu.classList.remove('hide');
-
-      let map = this.template.querySelector('lightning-map');
-      areaMenu.style.height = `${map.offsetHeight}px`;
     } else {
       areaMenu.classList.add('hide');
     }
