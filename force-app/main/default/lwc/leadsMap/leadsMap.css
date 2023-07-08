@@ -18,6 +18,16 @@
 .list {
     transition: opacity 1s;
 }
+.area-menu {
+    background: linear-gradient(to right, #ffffff 0%, #d8dde6 100%);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.filter-menu {
+    background: linear-gradient(to right, #ffffff 0%, #d8dde6 100%);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
 
 .fade-out {
     opacity: 0;

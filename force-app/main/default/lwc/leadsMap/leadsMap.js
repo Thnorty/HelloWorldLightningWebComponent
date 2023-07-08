@@ -29,6 +29,35 @@ export default class LeadsMap extends LightningElement {
   markerList;
   markerInfo;
   
+  renderedCallback() {
+    if (this.loaded) {
+      // Get the lightning-map component and the other elements
+      const map = this.template.querySelector('lightning-map');
+      const info = this.template.querySelector('.info');
+      const list = this.template.querySelector('.list');
+      const filterMenu = this.template.querySelector('.filter-menu');
+      const areaMenu = this.template.querySelector('.area-menu');
+
+      // Set the initial heights of the other elements to match the height of the lightning-map component
+      if (info) info.style.height = `${map.offsetHeight}px`;
+      if (list) list.style.height = `${map.offsetHeight}px`;
+      if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
+      if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
+
+      // Create a new ResizeObserver to detect changes to the height of the lightning-map component
+      const observer = new ResizeObserver(() => {
+          // Update the heights of the other elements to match the new height of the lightning-map component
+          if (info) info.style.height = `${map.offsetHeight}px`;
+          if (list) list.style.height = `${map.offsetHeight}px`;
+          if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
+          if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
+      });
+
+      // Observe changes to the height of the lightning-map component
+      observer.observe(map);
+    }
+  }
+
   // This method is wired to the getLeads Apex method.
   // It retrieves the leads data and sets it to the leads property.
   // If there is an error, it logs the error to the console.
@@ -36,7 +65,9 @@ export default class LeadsMap extends LightningElement {
   wiredLeads({ error, data }) {
       if (data) {
           this.leads = data;
-          this.handleSave();
+          this.handleFilterSave();
+          this.handleAreaSave();
+          this.loaded = true;
       } else if (error) {
           console.error(error);
       }
@@ -95,6 +126,36 @@ export default class LeadsMap extends LightningElement {
       ratingOptions.push({label: rating, value: rating});
     });
     return ratingOptions;
+  }
+
+  menu1Button() {
+    let areaMenu = this.template.querySelector('.area-menu');
+    let filterMenu = this.template.querySelector('.filter-menu');
+
+    if (filterMenu.classList.contains('hide')) {
+      areaMenu.classList.add('hide');
+      filterMenu.classList.remove('hide');
+
+      let map = this.template.querySelector('lightning-map');
+      filterMenu.style.height = `${map.offsetHeight}px`;
+    } else {
+      filterMenu.classList.add('hide');
+    }
+    this.test();
+  }
+  menu2Button() {
+    let areaMenu = this.template.querySelector('.area-menu');
+    let filterMenu = this.template.querySelector('.filter-menu');
+
+    if (areaMenu.classList.contains('hide')) {
+      filterMenu.classList.add('hide');
+      areaMenu.classList.remove('hide');
+
+      let map = this.template.querySelector('lightning-map');
+      areaMenu.style.height = `${map.offsetHeight}px`;
+    } else {
+      areaMenu.classList.add('hide');
+    }
   }
 
   handleCloseInfo() {
@@ -212,8 +273,8 @@ export default class LeadsMap extends LightningElement {
     this.statusFilter = '';
     this.ratingFilter = '';
   }
-  // This method sets the map.
-  handleSave() {
+  // This method applies the filters.
+  handleFilterSave() {
     this.mapMarkers = this.leads
     .filter(lead => (lead.Name && lead.Name.includes(this.nameFilter)) || (this.nameFilter === ''))
     .filter(lead => (lead.Email && lead.Email.includes(this.emailFilter)) || (this.emailFilter === ''))
@@ -243,7 +304,9 @@ export default class LeadsMap extends LightningElement {
           scale: 0.10
       }
     }));
-    
+  }
+  // This method applies the map shape.
+  handleAreaSave() {
     if (this.circleRadius > 0) {
       this.mapShape = {
         location: {
@@ -262,12 +325,10 @@ export default class LeadsMap extends LightningElement {
         strokeWeight: 2,
       }
     }
-    
+
     if (this.mapShape) {
       this.mapMarkers.push(this.mapShape);
     }
-    
-    this.loaded = true;
   }
 
   updateMarkerInfo(infoText) {

@@ -2,34 +2,16 @@
     <lightning-card title="Contacts Map">
         <div if:true={loaded}>
             <div class="slds-grid">
-                <div class="slds-grid_vertical slds-col slds-size_1-of-8">
-                    <div class="slds-box slds-col">
-                        <h2 class="slds-text-heading_small">Circle Area</h2>
-                        <lightning-input label="Area address" value={address} onchange={handleAddressChange}></lightning-input>
-                        <div class="slds-grid slds-gutters_xx-small">
-                            <lightning-input class="slds-col" label="Radius" value={circleRadius} onchange={handleCircleRadiusChange}></lightning-input>
-                            <lightning-combobox class="slds-col slds-size_1-of-2" label="Unit" options={unitOptions} value={mileOrKm} onchange={handleUnitChange}></lightning-combobox>
-                        </div>
-                        <br>
-                        <lightning-button variant="destructive-text" label="Clear" onclick={handleClearMarker}></lightning-button>
-                    </div>
-                    <div class="slds-box slds-col">
-                        <h2 class="slds-text-heading_small slds-col">Filters (Case Sensitive)</h2>
-                        <div class="slds-col">
-                            <lightning-input label="Name" value={nameFilter} onchange={handleNameFilterChange}></lightning-input>
-                            <lightning-input label="Email" value={emailFilter} onchange={handleEmailFilterChange}></lightning-input>
-                            <lightning-input label="Title" value={titleFilter} onchange={handleTitleFilterChange}></lightning-input>
-                            <lightning-combobox label="Lead Source" value={leadSourceFilter} options={leadSourceOptions} onchange={handleLeadSourceFilterChange}></lightning-combobox>
-                        </div>
-                        <div class="slds-col slds-grid slds-var-m-top_small">
-                            <lightning-button variant="destructive-text" label="Clear" onclick={handleClearFilters}></lightning-button>
-                        </div>
-                    </div>
-                    <br>
-                    <lightning-button class="slds-col slds-var-m-left_medium" variant="brand" label="Save" onclick={handleSave}></lightning-button>
+                <div class="slds-grid slds-grid_vertical slds-align-top">
+                    <lightning-button-icon class="slds-col slds-var-m-around_small" icon-name="utility:filterList" alternative-text="Filter" variant="brand" onclick={menu1Button}>
+                        <label>Filter</label>
+                    </lightning-button-icon>
+                    <lightning-button-icon class="slds-col slds-var-m-around_small" icon-name="utility:steps" alternative-text="Select area" variant="brand" onclick={menu2Button}>
+                        <label>Select area</label>
+                    </lightning-button-icon>
                 </div>
                 <div class="slds-grid slds-col">
-                    <lightning-map class="slds-col slds-size_3-of-4"
+                    <lightning-map class="slds-col"
                         map-markers={mapMarkers}
                         title="Contacts Map"
                         onmarkerselect={handleMarkerSelect}
@@ -37,8 +19,8 @@
                         center={mapCenter}
                         list-view="hidden">
                     </lightning-map>
-                    <div class="slds-col slds-size_1-of-4">
-                        <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-5 slds-scrollable_y slds-is-absolute list">
+                    <div class="slds-col slds-size_1-of-4 slds-var-m-right_medium">
+                        <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-4 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
                                 <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
                                     <svg width="25" height="25">
@@ -72,6 +54,29 @@
                                 <p class="marker-info-phone"></p>
                             </div>
                         </div>
+                    </div>
+                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium filter-menu hide">
+                        <h2 class="slds-text-heading_small slds-col">Filters (Case Sensitive)</h2>
+                        <div class="slds-col">
+                            <lightning-input label="Name" value={nameFilter} onchange={handleNameFilterChange}></lightning-input>
+                            <lightning-input label="Email" value={emailFilter} onchange={handleEmailFilterChange}></lightning-input>
+                            <lightning-input label="Title" value={titleFilter} onchange={handleTitleFilterChange}></lightning-input>
+                            <lightning-combobox label="Lead Source" value={leadSourceFilter} options={leadSourceOptions} onchange={handleLeadSourceFilterChange}></lightning-combobox>
+                        </div>
+                        <br>
+                        <lightning-button variant="destructive-text" label="Clear" onclick={handleClearFilters}></lightning-button>
+                        <lightning-button class="slds-var-m-left_x-small" variant="brand" label="Save" onclick={handleFilterSave}></lightning-button>
+                    </div>
+                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium area-menu hide">
+                        <h2 class="slds-text-heading_small">Circle Area</h2>
+                        <lightning-input label="Area address" value={address} onchange={handleAddressChange}></lightning-input>
+                        <div class="slds-grid slds-gutters_xx-small">
+                            <lightning-input class="slds-col" label="Radius" value={circleRadius} onchange={handleCircleRadiusChange}></lightning-input>
+                            <lightning-combobox class="slds-col slds-size_1-of-2" label="Unit" options={unitOptions} value={mileOrKm} onchange={handleUnitChange}></lightning-combobox>
+                        </div>
+                        <br>
+                        <lightning-button variant="destructive-text" label="Clear" onclick={handleClearMarker}></lightning-button>
+                        <lightning-button class="slds-var-m-left_x-small" variant="brand" label="Save" onclick={handleAreaSave}></lightning-button>
                     </div>
                 </div>
             </div>
