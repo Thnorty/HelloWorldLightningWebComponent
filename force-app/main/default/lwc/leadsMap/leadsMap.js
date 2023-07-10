@@ -44,17 +44,14 @@ export default class LeadsMap extends LightningElement {
       if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
       if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
 
-      // Create a new ResizeObserver to detect changes to the height of the lightning-map component
-      const observer = new ResizeObserver(() => {
+      // Add an event listener to the window object to detect changes to the height of the lightning-map component
+      window.addEventListener('resize', () => {
           // Update the heights of the other elements to match the new height of the lightning-map component
           if (info) info.style.height = `${map.offsetHeight}px`;
           if (list) list.style.height = `${map.offsetHeight}px`;
           if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
           if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
       });
-
-      // Observe changes to the height of the lightning-map component
-      observer.observe(map);
     }
   }
 
@@ -138,7 +135,6 @@ export default class LeadsMap extends LightningElement {
     } else {
       filterMenu.classList.add('hide');
     }
-    this.test();
   }
   menu2Button() {
     let areaMenu = this.template.querySelector('.area-menu');
@@ -296,7 +292,8 @@ export default class LeadsMap extends LightningElement {
           strokeOpacity: 1,
           strokeWeight: 1,
           scale: 0.10
-      }
+      },
+      id: lead.Id
     }));
   }
   // This method applies the map shape.
