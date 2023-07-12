@@ -25,29 +25,10 @@ export default class ContactsMap extends LightningElement {
   markerList;
   markerInfo;
   
+  // This method is called when the component is rendered.
   renderedCallback() {
     if (this.loaded) {
-      // Get the lightning-map component and the other elements
-      const map = this.template.querySelector('lightning-map');
-      const info = this.template.querySelector('.info');
-      const list = this.template.querySelector('.list');
-      const filterMenu = this.template.querySelector('.filter-menu');
-      const areaMenu = this.template.querySelector('.area-menu');
-
-      // Set the initial heights of the other elements to match the height of the lightning-map component
-      if (info) info.style.height = `${map.offsetHeight}px`;
-      if (list) list.style.height = `${map.offsetHeight}px`;
-      if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
-      if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
-
-      // Add an event listener to the window object to detect changes to the height of the lightning-map component
-      window.addEventListener('resize', () => {
-          // Update the heights of the other elements to match the new height of the lightning-map component
-          if (info) info.style.height = `${map.offsetHeight}px`;
-          if (list) list.style.height = `${map.offsetHeight}px`;
-          if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
-          if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
-      });
+      this.setHeights();
     }
   }
 
@@ -65,13 +46,40 @@ export default class ContactsMap extends LightningElement {
           console.error(error);
       }
   }
-  
+
+  // This method is used to set the heights of the elements to match the height of the lightning-map component.
+  setHeights() {
+    // Get the lightning-map component and the other elements
+    const map = this.template.querySelector('lightning-map');
+    const info = this.template.querySelector('.info');
+    const list = this.template.querySelector('.list');
+    const filterMenu = this.template.querySelector('.filter-menu');
+    const areaMenu = this.template.querySelector('.area-menu');
+
+    // Set the initial heights of the other elements to match the height of the lightning-map component
+    if (info) info.style.height = `${map.offsetHeight}px`;
+    if (list) list.style.height = `${map.offsetHeight}px`;
+    if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
+    if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
+
+    // Add an event listener to the window object to detect changes to the height of the lightning-map component
+    window.addEventListener('resize', () => {
+        // Update the heights of the other elements to match the new height of the lightning-map component
+        if (info) info.style.height = `${map.offsetHeight}px`;
+        if (list) list.style.height = `${map.offsetHeight}px`;
+        if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
+        if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
+    });
+  }
+    
+  // Unit options getter
   get unitOptions() {
     return [
       { label: 'Km', value: 'km' },
       { label: 'Mi', value: 'mi' }
     ]
   }
+  // Lead Source options getter
   get leadSourceOptions() {
     let leadSourceOptions = [];
     let leadSourceSet = new Set();
@@ -85,40 +93,44 @@ export default class ContactsMap extends LightningElement {
     return leadSourceOptions;
   }
 
+  // On click function for the filter button
   menu1Button() {
     let areaMenu = this.template.querySelector('.area-menu');
     let filterMenu = this.template.querySelector('.filter-menu');
 
-    if (filterMenu.classList.contains('hide')) {
-      areaMenu.classList.add('hide');
-      filterMenu.classList.remove('hide');
+    if (filterMenu.classList.contains('slds-hide')) {
+      areaMenu.classList.add('slds-hide');
+      filterMenu.classList.remove('slds-hide');
     } else {
-      filterMenu.classList.add('hide');
+      filterMenu.classList.add('slds-hide');
     }
   }
+  // On click function for the area button
   menu2Button() {
     let areaMenu = this.template.querySelector('.area-menu');
     let filterMenu = this.template.querySelector('.filter-menu');
 
-    if (areaMenu.classList.contains('hide')) {
-      filterMenu.classList.add('hide');
-      areaMenu.classList.remove('hide');
+    if (areaMenu.classList.contains('slds-hide')) {
+      filterMenu.classList.add('slds-hide');
+      areaMenu.classList.remove('slds-hide');
     } else {
-      areaMenu.classList.add('hide');
+      areaMenu.classList.add('slds-hide');
     }
   }
 
+  // On click function for closing the info window
   handleCloseInfo() {
     this.markerList = this.template.querySelector('.list');
     this.markerInfo = this.template.querySelector('.info');
 
     this.markerList.classList.remove('fade-out');
     this.markerInfo.classList.remove('fade-in');
-    this.markerInfo.classList.add('hide');
+    this.markerInfo.classList.add('slds-hide');
 
     this.selectedMarkerValue = '';
   }
 
+  // On click function for the map markers
   handleMarkerSelect(event) {
     this.selectedMarkerValue = event.target.selectedMarkerValue;
     
@@ -140,6 +152,7 @@ export default class ContactsMap extends LightningElement {
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
   
+  // On click function for the list elements
   handleListElementClick(event) {
     const value = event.currentTarget.getAttribute('data-id');
     this.selectedMarkerValue = value;
@@ -161,31 +174,25 @@ export default class ContactsMap extends LightningElement {
 
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
-  
+  // These methods are for updating values
   handleUnitChange(event) {
     this.mileOrKm = event.target.value;
   }
-
   handleAddressChange(event) {
     this.address = event.target.value;
   }
-
   handleCircleRadiusChange(event) {
     this.circleRadius = Number(event.target.value);
   }
-
   handleNameFilterChange(event) {
     this.nameFilter = event.target.value;
   }
-
   handleEmailFilterChange(event) {
     this.emailFilter = event.target.value;
   }
-
   handleTitleFilterChange(event) {
     this.titleFilter = event.target.value;
   }
-
   handleLeadSourceFilterChange(event) {
     this.leadSourceFilter = event.target.value;
   }
@@ -258,6 +265,7 @@ export default class ContactsMap extends LightningElement {
     }
   }
 
+  // This method updates the marker info
   updateMarkerInfo(infoText) {
     const markerInfoName = this.template.querySelector('.marker-info-name');
     const markerInfoEmail = this.template.querySelector('.marker-info-email');
@@ -285,11 +293,12 @@ export default class ContactsMap extends LightningElement {
     this.markerInfo = this.template.querySelector('.info');
 
     this.markerList.classList.add('fade-out');
-    this.markerInfo.classList.remove('hide');
+    this.markerInfo.classList.remove('slds-hide');
     this.markerInfo.classList.add('fade-in');
   }
 }
 
+// This method generates a random color.
 function getRandomColor() {
   const r = Math.floor(Math.random() * 256);
   const g = Math.floor(Math.random() * 256);

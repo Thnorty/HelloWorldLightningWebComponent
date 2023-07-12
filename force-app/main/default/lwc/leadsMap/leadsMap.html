@@ -38,7 +38,7 @@
                                 </div>
                             </template>
                         </div>
-                        <div class="slds-box slds-size_1-of-5 slds-is-absolute info hide">
+                        <div class="slds-box slds-size_1-of-5 slds-is-absolute info slds-hide">
                             <lightning-button-icon class="slds-float_right" icon-name="utility:close" onclick={handleCloseInfo}>
                                 <label>Close</label>
                             </lightning-button-icon>
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium filter-menu hide">
+                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium filter-menu slds-hide">
                         <h2 class="slds-text-heading_small slds-col">Filters (Case Sensitive)</h2>
                         <div class="slds-col">
                             <lightning-input label="Name" value={nameFilter} onchange={handleNameFilterChange}></lightning-input>
@@ -71,7 +71,7 @@
                         <lightning-button variant="destructive-text" label="Clear" onclick={handleClearFilters}></lightning-button>
                         <lightning-button class="slds-var-m-left_x-small" variant="brand" label="Save" onclick={handleFilterSave}></lightning-button>
                     </div>
-                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium area-menu hide">
+                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium area-menu slds-hide">
                         <h2 class="slds-text-heading_small">Circle Area</h2>
                         <lightning-input label="Area address" value={address} onchange={handleAddressChange}></lightning-input>
                         <div class="slds-grid slds-gutters_xx-small">
