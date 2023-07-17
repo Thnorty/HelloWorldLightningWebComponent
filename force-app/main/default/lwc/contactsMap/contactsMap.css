@@ -10,13 +10,8 @@
 }
 .info, .list {
     height: 92%;
-}
-.info {
+    transition: opacity 1s;
     border-radius: 5px;
-    transition: opacity 1s;
-}
-.list {
-    transition: opacity 1s;
 }
 .area-menu {
     background: linear-gradient(to right, #ffffff 0%, #d8dde6 100%);
