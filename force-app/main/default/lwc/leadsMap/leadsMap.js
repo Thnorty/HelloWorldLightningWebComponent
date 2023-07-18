@@ -337,6 +337,7 @@ export default class LeadsMap extends LightningElement {
         },
         value: lead.Name + " - " + lead.Email + " - " + lead.Phone,
         name: lead.Name,
+        photoUrl: lead.PhotoUrl,
         mapIcon: {
           path: "M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z",
           fillColor: getRandomColor(),

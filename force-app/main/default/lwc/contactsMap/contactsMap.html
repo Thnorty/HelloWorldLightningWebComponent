@@ -23,17 +23,14 @@
                         <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-4 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
                                 <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal slds-var-p-around_xx-small list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
-                                    <svg width="25" height="25">
-                                        <path
-                                            d={mapMarker.mapIcon.path}
-                                            fill={mapMarker.mapIcon.fillColor}
-                                            fill-opacity={mapMarker.mapIcon.fillOpacity}
-                                            stroke={mapMarker.mapIcon.strokeColor}
-                                            stroke-opacity={mapMarker.mapIcon.strokeOpacity}
-                                            stroke-width={mapMarker.mapIcon.strokeWeight}
-                                            transform="scale(0.1)">
-                                        </path>
-                                    </svg>
+                                    <div class="list-element-icon">
+                                        <span class="slds-is-absolute">
+                                            <img src={mapMarker.photoUrl} alt="Profile Picture" />
+                                        </span>
+                                        <svg class="slds-is-absolute" width="40" height="40">
+                                            <circle cx="20" cy="20" r="20" stroke={mapMarker.mapIcon.fillColor} stroke-width="5" fill="transparent" />
+                                        </svg>
+                                    </div>
                                     <p class="slds-var-m-left_medium">{mapMarker.name}</p>
                                 </div>
                             </template>

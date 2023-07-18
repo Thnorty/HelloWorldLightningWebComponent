@@ -258,6 +258,7 @@ export default class ContactsMap extends LightningElement {
         },
         value: contact.Name + " - " + contact.Email + " - " + contact.Phone,
         name: contact.Name,
+        photoUrl: contact.PhotoUrl,
         mapIcon: {
           path: "M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z",
           fillColor: getRandomColor(),
