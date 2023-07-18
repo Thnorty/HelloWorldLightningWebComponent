@@ -81,17 +81,17 @@ describe("c-leads-map", () => {
       buttons[0].click();
       // try to find text 'Filters (Case Sensitive)' in the shadow root
       const filters = element.shadowRoot.querySelector(".filter-menu");
-      expect(filters.classList).not.toContain("hide");
+      expect(filters.classList).not.toContain("slds-hide");
 
       // Click on the second button to open the area menu
       buttons[1].click();
       // try to find text 'Circle Area' in the shadow root
       const area = element.shadowRoot.querySelector(".area-menu");
-      expect(area.classList).not.toContain("hide");
+      expect(area.classList).not.toContain("slds-hide");
 
       // Check if the first menu is closed
       const filterMenu = element.shadowRoot.querySelector(".filter-menu");
-      expect(filterMenu.classList).toContain("hide");
+      expect(filterMenu.classList).toContain("slds-hide");
     });
   });
 });

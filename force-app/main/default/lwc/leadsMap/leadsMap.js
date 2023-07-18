@@ -1,5 +1,6 @@
 import { LightningElement, wire } from "lwc";
 import getLeads from "@salesforce/apex/LeadController.getLeads";
+import LeadModal from "./leadModal";
 
 export default class LeadsMap extends LightningElement {
   error;
@@ -43,12 +44,22 @@ export default class LeadsMap extends LightningElement {
   wiredLeads({ error, data }) {
     if (data) {
       this.leads = data;
+      this.loaded = true;
       this.handleFilterSave();
       this.handleAreaSave();
-      this.loaded = true;
     } else if (error) {
       console.error(error);
     }
+  }
+
+  // This method is used to bring up the create lead modal.
+  async handleOpenModal() {
+    await LeadModal.open({
+      size: "small"
+    });
+
+    this.handleFilterSave();
+    this.handleAreaSave();
   }
 
   // This method is used to set the heights of the elements to match the height of the lightning-map component.
@@ -56,12 +67,14 @@ export default class LeadsMap extends LightningElement {
     // Get the lightning-map component and the other elements
     const map = this.template.querySelector("lightning-map");
     const info = this.template.querySelector(".info");
+    const noItemPage = this.template.querySelector(".no-item-page");
     const list = this.template.querySelector(".list");
     const filterMenu = this.template.querySelector(".filter-menu");
     const areaMenu = this.template.querySelector(".area-menu");
 
     // Set the initial heights of the other elements to match the height of the lightning-map component
     if (info) info.style.height = `${map.offsetHeight}px`;
+    if (noItemPage) noItemPage.style.height = `${map.offsetHeight}px`;
     if (list) list.style.height = `${map.offsetHeight}px`;
     if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
     if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
@@ -70,6 +83,7 @@ export default class LeadsMap extends LightningElement {
     window.addEventListener("resize", () => {
       // Update the heights of the other elements to match the new height of the lightning-map component
       if (info) info.style.height = `${map.offsetHeight}px`;
+      if (noItemPage) noItemPage.style.height = `${map.offsetHeight}px`;
       if (list) list.style.height = `${map.offsetHeight}px`;
       if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
       if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
@@ -334,6 +348,15 @@ export default class LeadsMap extends LightningElement {
         },
         id: lead.Id
       }));
+
+    const noItemPage = this.template.querySelector(".no-item-page");
+    if (noItemPage) {
+      if (this.mapMarkers.length === 0) {
+        noItemPage.classList.remove("slds-hide");
+      } else {
+        noItemPage.classList.add("slds-hide");
+      }
+    }
   }
   // This method applies the map shape.
   handleAreaSave() {

@@ -38,11 +38,20 @@
                                 </div>
                             </template>
                         </div>
-                        <div class="slds-size_1-of-4 slds-is-absolute info slds-hide">
+                        <div class="slds-size_1-of-4 slds-align_absolute-center slds-grid_vertical slds-is-absolute no-item-page slds-hide">
+                            <p class="slds-text-heading_small slds-var-m-bottom_large">No contacts were found :/</p>
+                            <lightning-button
+                                onclick={handleOpenModal}
+                                aria-haspopup="dialog"
+                                label="Create New Contact"
+                                variant="brand">
+                            </lightning-button>
+                        </div>
+                        <div class="slds-size_1-of-4 slds-box slds-is-absolute info slds-hide">
                             <lightning-button-icon class="slds-float_right" icon-name="utility:close" onclick={handleCloseInfo}>
                                 <label>Close</label>
                             </lightning-button-icon>
-                            <div class="slds-box" style="font-size: large;">
+                            <div style="font-size: large;">
                                 <svg class="slds-align_absolute-center slds-var-m-top_xx-large slds-var-m-bottom_xx-large" width="250" height="250">
                                     <path class="marker-icon-path"></path>
                                 </svg>
