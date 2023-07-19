@@ -1,4 +1,5 @@
-import { LightningElement, wire } from "lwc";
+import { LightningElement, wire, track } from "lwc";
+import { refreshApex } from "@salesforce/apex";
 import getContacts from "@salesforce/apex/ContactController.getContacts";
 import ContactModal from "./contactModal";
 
@@ -6,7 +7,8 @@ export default class ContactsMap extends LightningElement {
   error;
   contacts;
   mapShape;
-  mapMarkers = [];
+  @track mapMarkers = [];
+  @track favoriteContacts = [];
   loaded = false;
   address = "";
   circleRadius = 0;
@@ -37,14 +39,16 @@ export default class ContactsMap extends LightningElement {
   // It retrieves the contacts data and sets it to the contacts property.
   // If there is an error, it logs the error to the console.
   @wire(getContacts)
-  wiredContacts({ error, data }) {
-    if (data) {
-      this.contacts = data;
+  wiredContacts(result) {
+    this.wiredContactList = result;
+
+    if (result.data) {
+      this.contacts = result.data;
       this.loaded = true;
       this.handleFilterSave();
       this.handleAreaSave();
-    } else if (error) {
-      console.error(error);
+    } else if (result.error) {
+      console.error(result.error);
     }
   }
 
@@ -53,6 +57,7 @@ export default class ContactsMap extends LightningElement {
     await ContactModal.open({
       size: "small"
     });
+    await refreshApex(this.wiredContactList);
 
     this.handleFilterSave();
     this.handleAreaSave();
@@ -67,8 +72,8 @@ export default class ContactsMap extends LightningElement {
     const list = this.template.querySelector(".list");
     const filterMenu = this.template.querySelector(".filter-menu");
     const areaMenu = this.template.querySelector(".area-menu");
-    const savedContactsMenu = this.template.querySelector(
-      ".saved-contacts-menu"
+    const favoriteContactsMenu = this.template.querySelector(
+      ".favorite-contacts-menu"
     );
 
     // Set the initial heights of the other elements to match the height of the lightning-map component
@@ -77,8 +82,8 @@ export default class ContactsMap extends LightningElement {
     if (list) list.style.height = `${map.offsetHeight}px`;
     if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
     if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
-    if (savedContactsMenu)
-      savedContactsMenu.style.height = `${map.offsetHeight}px`;
+    if (favoriteContactsMenu)
+      favoriteContactsMenu.style.height = `${map.offsetHeight}px`;
 
     // Add an event listener to the window object to detect changes to the height of the lightning-map component
     window.addEventListener("resize", () => {
@@ -88,8 +93,8 @@ export default class ContactsMap extends LightningElement {
       if (list) list.style.height = `${map.offsetHeight}px`;
       if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
       if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
-      if (savedContactsMenu)
-        savedContactsMenu.style.height = `${map.offsetHeight}px`;
+      if (favoriteContactsMenu)
+        favoriteContactsMenu.style.height = `${map.offsetHeight}px`;
     });
   }
 
@@ -118,11 +123,13 @@ export default class ContactsMap extends LightningElement {
   menu1Button() {
     let filterMenu = this.template.querySelector(".filter-menu");
     let areaMenu = this.template.querySelector(".area-menu");
-    let savedContactsMenu = this.template.querySelector(".saved-contacts-menu");
+    let favoriteContactsMenu = this.template.querySelector(
+      ".favorite-contacts-menu"
+    );
 
     if (filterMenu.classList.contains("slds-hide")) {
       areaMenu.classList.add("slds-hide");
-      savedContactsMenu.classList.add("slds-hide");
+      favoriteContactsMenu.classList.add("slds-hide");
       filterMenu.classList.remove("slds-hide");
     } else {
       filterMenu.classList.add("slds-hide");
@@ -132,28 +139,32 @@ export default class ContactsMap extends LightningElement {
   menu2Button() {
     let filterMenu = this.template.querySelector(".filter-menu");
     let areaMenu = this.template.querySelector(".area-menu");
-    let savedContactsMenu = this.template.querySelector(".saved-contacts-menu");
+    let favoriteContactsMenu = this.template.querySelector(
+      ".favorite-contacts-menu"
+    );
 
     if (areaMenu.classList.contains("slds-hide")) {
       filterMenu.classList.add("slds-hide");
-      savedContactsMenu.classList.add("slds-hide");
+      favoriteContactsMenu.classList.add("slds-hide");
       areaMenu.classList.remove("slds-hide");
     } else {
       areaMenu.classList.add("slds-hide");
     }
   }
-  // On click function for the saved contacts button
+  // On click function for the favorite contacts button
   menu3Button() {
     let filterMenu = this.template.querySelector(".filter-menu");
     let areaMenu = this.template.querySelector(".area-menu");
-    let savedContactsMenu = this.template.querySelector(".saved-contacts-menu");
+    let favoriteContactsMenu = this.template.querySelector(
+      ".favorite-contacts-menu"
+    );
 
-    if (savedContactsMenu.classList.contains("slds-hide")) {
+    if (favoriteContactsMenu.classList.contains("slds-hide")) {
       filterMenu.classList.add("slds-hide");
       areaMenu.classList.add("slds-hide");
-      savedContactsMenu.classList.remove("slds-hide");
+      favoriteContactsMenu.classList.remove("slds-hide");
     } else {
-      savedContactsMenu.classList.add("slds-hide");
+      favoriteContactsMenu.classList.add("slds-hide");
     }
   }
 
@@ -213,6 +224,27 @@ export default class ContactsMap extends LightningElement {
 
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
+
+  // On click function for the favorite button
+  handleFavoriteClick(event) {
+    event.stopPropagation();
+
+    const button = event.currentTarget;
+    const value = button.getAttribute("data-id");
+    const name = value.split(" - ")[0];
+
+    if (button.iconName === "utility:favorite_alt") {
+      this.favoriteContacts.push(name);
+    } else {
+      this.favoriteContacts = this.favoriteContacts.filter((id) => id !== name);
+    }
+
+    button.iconName =
+      button.iconName === "utility:favorite"
+        ? "utility:favorite_alt"
+        : "utility:favorite";
+  }
+
   // These methods are for updating values
   handleUnitChange(event) {
     this.mileOrKm = event.target.value;

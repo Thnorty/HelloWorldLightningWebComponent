@@ -35,6 +35,9 @@
                                         </svg>
                                     </div>
                                     <p class="slds-var-m-left_medium" style="font-size: large;">{mapMarker.name}</p>
+                                    <lightning-button-icon data-id={mapMarker.value} icon-name="utility:favorite_alt" size="large" alternative-text="Favorite" variant="bare" onclick={handleFavoriteClick} style="margin-left: auto;">
+                                        <label>Favorite</label>
+                                    </lightning-button-icon>
                                 </div>
                             </template>
                         </div>
@@ -96,8 +99,13 @@
                         <lightning-button variant="destructive-text" label="Clear" onclick={handleClearMarker}></lightning-button>
                         <lightning-button class="slds-var-m-left_x-small" variant="brand" label="Save" onclick={handleAreaSave}></lightning-button>
                     </div>
-                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium saved-leads-menu slds-hide">
-                        <h2 class="slds-text-heading_small">Saved Leads</h2>
+                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium favorite-leads-menu slds-hide">
+                        <h2 class="slds-text-heading_small">Favorite Leads</h2>
+                        <template for:each={favoriteLeads} for:item="favoriteLead">
+                            <div key={favoriteLead}>
+                                <p>{favoriteLead}</p>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>

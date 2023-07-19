@@ -1,4 +1,5 @@
-import { LightningElement, wire } from "lwc";
+import { LightningElement, wire, track } from "lwc";
+import { refreshApex } from "@salesforce/apex";
 import getLeads from "@salesforce/apex/LeadController.getLeads";
 import LeadModal from "./leadModal";
 
@@ -6,7 +7,8 @@ export default class LeadsMap extends LightningElement {
   error;
   leads;
   mapShape;
-  mapMarkers = [];
+  @track mapMarkers = [];
+  @track favoriteLeads = [];
   loaded = false;
   address = "";
   circleRadius = 0;
@@ -41,14 +43,16 @@ export default class LeadsMap extends LightningElement {
   // It retrieves the leads data and sets it to the leads property.
   // If there is an error, it logs the error to the console.
   @wire(getLeads)
-  wiredLeads({ error, data }) {
-    if (data) {
-      this.leads = data;
+  wiredLeads(result) {
+    this.wiredLeadsList = result;
+
+    if (result.data) {
+      this.leads = result.data;
       this.loaded = true;
       this.handleFilterSave();
       this.handleAreaSave();
-    } else if (error) {
-      console.error(error);
+    } else if (result.error) {
+      console.error(result.error);
     }
   }
 
@@ -57,6 +61,7 @@ export default class LeadsMap extends LightningElement {
     await LeadModal.open({
       size: "small"
     });
+    await refreshApex(this.wiredLeadsList);
 
     this.handleFilterSave();
     this.handleAreaSave();
@@ -71,7 +76,9 @@ export default class LeadsMap extends LightningElement {
     const list = this.template.querySelector(".list");
     const filterMenu = this.template.querySelector(".filter-menu");
     const areaMenu = this.template.querySelector(".area-menu");
-    const savedLeadsMenu = this.template.querySelector(".saved-leads-menu");
+    const favoriteLeadsMenu = this.template.querySelector(
+      ".favorite-leads-menu"
+    );
 
     // Set the initial heights of the other elements to match the height of the lightning-map component
     if (info) info.style.height = `${map.offsetHeight}px`;
@@ -79,7 +86,8 @@ export default class LeadsMap extends LightningElement {
     if (list) list.style.height = `${map.offsetHeight}px`;
     if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
     if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
-    if (savedLeadsMenu) savedLeadsMenu.style.height = `${map.offsetHeight}px`;
+    if (favoriteLeadsMenu)
+      favoriteLeadsMenu.style.height = `${map.offsetHeight}px`;
 
     // Add an event listener to the window object to detect changes to the height of the lightning-map component
     window.addEventListener("resize", () => {
@@ -89,7 +97,8 @@ export default class LeadsMap extends LightningElement {
       if (list) list.style.height = `${map.offsetHeight}px`;
       if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
       if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
-      if (savedLeadsMenu) savedLeadsMenu.style.height = `${map.offsetHeight}px`;
+      if (favoriteLeadsMenu)
+        favoriteLeadsMenu.style.height = `${map.offsetHeight}px`;
     });
   }
 
@@ -157,11 +166,11 @@ export default class LeadsMap extends LightningElement {
   menu1Button() {
     let filterMenu = this.template.querySelector(".filter-menu");
     let areaMenu = this.template.querySelector(".area-menu");
-    let savedLeadsMenu = this.template.querySelector(".saved-leads-menu");
+    let favoriteLeadsMenu = this.template.querySelector(".favorite-leads-menu");
 
     if (filterMenu.classList.contains("slds-hide")) {
       areaMenu.classList.add("slds-hide");
-      savedLeadsMenu.classList.add("slds-hide");
+      favoriteLeadsMenu.classList.add("slds-hide");
       filterMenu.classList.remove("slds-hide");
     } else {
       filterMenu.classList.add("slds-hide");
@@ -171,28 +180,28 @@ export default class LeadsMap extends LightningElement {
   menu2Button() {
     let filterMenu = this.template.querySelector(".filter-menu");
     let areaMenu = this.template.querySelector(".area-menu");
-    let savedLeadsMenu = this.template.querySelector(".saved-leads-menu");
+    let favoriteLeadsMenu = this.template.querySelector(".favorite-leads-menu");
 
     if (areaMenu.classList.contains("slds-hide")) {
       filterMenu.classList.add("slds-hide");
-      savedLeadsMenu.classList.add("slds-hide");
+      favoriteLeadsMenu.classList.add("slds-hide");
       areaMenu.classList.remove("slds-hide");
     } else {
       areaMenu.classList.add("slds-hide");
     }
   }
-  // On click function for the saved leads button
+  // On click function for the favorite leads button
   menu3Button() {
     let filterMenu = this.template.querySelector(".filter-menu");
     let areaMenu = this.template.querySelector(".area-menu");
-    let savedLeadsMenu = this.template.querySelector(".saved-leads-menu");
+    let favoriteLeadsMenu = this.template.querySelector(".favorite-leads-menu");
 
-    if (savedLeadsMenu.classList.contains("slds-hide")) {
+    if (favoriteLeadsMenu.classList.contains("slds-hide")) {
       filterMenu.classList.add("slds-hide");
       areaMenu.classList.add("slds-hide");
-      savedLeadsMenu.classList.remove("slds-hide");
+      favoriteLeadsMenu.classList.remove("slds-hide");
     } else {
-      savedLeadsMenu.classList.add("slds-hide");
+      favoriteLeadsMenu.classList.add("slds-hide");
     }
   }
 
@@ -252,6 +261,27 @@ export default class LeadsMap extends LightningElement {
 
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
+
+  // On click function for the favorite button
+  handleFavoriteClick(event) {
+    event.stopPropagation();
+
+    const button = event.currentTarget;
+    const value = button.getAttribute("data-id");
+    const name = value.split(" - ")[0];
+
+    if (button.iconName === "utility:favorite_alt") {
+      this.favoriteLeads.push(name);
+    } else {
+      this.favoriteLeads = this.favoriteLeads.filter((id) => id !== name);
+    }
+
+    button.iconName =
+      button.iconName === "utility:favorite"
+        ? "utility:favorite_alt"
+        : "utility:favorite";
+  }
+
   // These methods are for updating values
   handleUnitChange(event) {
     this.mileOrKm = event.target.value;
