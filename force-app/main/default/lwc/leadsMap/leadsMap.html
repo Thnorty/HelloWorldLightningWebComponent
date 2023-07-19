@@ -25,13 +25,13 @@
                                 <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal slds-var-p-around_xx-small list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
                                     <div class="list-element-icon">
                                         <span class="slds-is-absolute">
-                                            <img src={mapMarker.photoUrl} alt="Profile Picture" />
+                                            <img src={mapMarker.photoUrl} alt="Profile Picture" width="40" height="40" />
                                         </span>
                                         <svg class="slds-is-absolute" width="40" height="40">
                                             <circle cx="20" cy="20" r="20" stroke={mapMarker.mapIcon.fillColor} stroke-width="5" fill="transparent" />
                                         </svg>
                                     </div>
-                                    <p class="slds-var-m-left_medium">{mapMarker.name}</p>
+                                    <p class="slds-var-m-left_medium" style="font-size: large;">{mapMarker.name}</p>
                                 </div>
                             </template>
                         </div>
@@ -44,14 +44,19 @@
                                 variant="brand">
                             </lightning-button>
                         </div>
-                        <div class="slds-size_1-of-4 slds-is-absolute info slds-hide">
+                        <div class="slds-size_1-of-4 slds-box slds-is-absolute info slds-hide">
                             <lightning-button-icon class="slds-float_right" icon-name="utility:close" onclick={handleCloseInfo}>
                                 <label>Close</label>
                             </lightning-button-icon>
                             <div style="font-size: large;">
-                                <svg class="slds-align_absolute-center slds-var-m-top_xx-large slds-var-m-bottom_xx-large" width="250" height="250">
-                                    <path class="marker-icon-path"></path>
-                                </svg>
+                                <div class="info-icon">
+                                    <span class="slds-is-absolute">
+                                        <img class="info-icon-photo" src="" alt="Profile Picture" width="40" height="40" />
+                                    </span>
+                                    <svg class="slds-is-absolute" width="40" height="40">
+                                        <circle class="info-icon-circle" cx="20" cy="20" r="20" stroke="" stroke-width="5" fill="transparent" />
+                                    </svg>
+                                </div>
                                 <p><b>Name: </b></p>
                                 <p class="marker-info-name"></p>
                                 <p><b>Email: </b></p>

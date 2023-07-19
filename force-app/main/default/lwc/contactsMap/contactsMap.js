@@ -314,7 +314,8 @@ export default class ContactsMap extends LightningElement {
     const markerInfoName = this.template.querySelector(".marker-info-name");
     const markerInfoEmail = this.template.querySelector(".marker-info-email");
     const markerInfoPhone = this.template.querySelector(".marker-info-phone");
-    const markerIconPath = this.template.querySelector(".marker-icon-path");
+    const infoIconPhoto = this.template.querySelector(".info-icon-photo");
+    const infoIconSvg = this.template.querySelector(".info-icon-circle");
 
     markerInfoName.textContent = infoText.split(" - ")[0];
     markerInfoEmail.textContent = infoText.split(" - ")[1];
@@ -322,29 +323,8 @@ export default class ContactsMap extends LightningElement {
 
     for (let i = 0; i < this.mapMarkers.length; i++) {
       if (this.mapMarkers[i].value === infoText) {
-        markerIconPath.setAttribute("d", this.mapMarkers[i].mapIcon.path);
-        markerIconPath.setAttribute(
-          "fill",
-          this.mapMarkers[i].mapIcon.fillColor
-        );
-        markerIconPath.setAttribute(
-          "fill-opacity",
-          this.mapMarkers[i].mapIcon.fillOpacity
-        );
-        markerIconPath.setAttribute(
-          "stroke",
-          this.mapMarkers[i].mapIcon.strokeColor
-        );
-        markerIconPath.setAttribute(
-          "stroke-opacity",
-          this.mapMarkers[i].mapIcon.strokeOpacity
-        );
-        markerIconPath.setAttribute(
-          "stroke-width",
-          this.mapMarkers[i].mapIcon.strokeWeight
-        );
-        markerIconPath.setAttribute("transform", "scale(0.8)");
-        break;
+        infoIconPhoto.src = this.mapMarkers[i].photoUrl;
+        infoIconSvg.style.stroke = this.mapMarkers[i].mapIcon.fillColor;
       }
     }
 
