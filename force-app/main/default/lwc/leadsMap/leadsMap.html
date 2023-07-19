@@ -9,6 +9,9 @@
                     <lightning-button-icon class="slds-col slds-var-m-around_small" icon-name="utility:steps" alternative-text="Select area" variant="brand" onclick={menu2Button}>
                         <label>Select area</label>
                     </lightning-button-icon>
+                    <lightning-button-icon class="slds-col slds-var-m-around_small" icon-name="utility:groups" alternative-text="Saved leads" variant="brand" onclick={menu3Button}>
+                        <label>Saved contacts</label>
+                    </lightning-button-icon>
                 </div>
                 <div class="slds-grid slds-col">
                     <lightning-map class="slds-col"
@@ -92,6 +95,9 @@
                         <br>
                         <lightning-button variant="destructive-text" label="Clear" onclick={handleClearMarker}></lightning-button>
                         <lightning-button class="slds-var-m-left_x-small" variant="brand" label="Save" onclick={handleAreaSave}></lightning-button>
+                    </div>
+                    <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium saved-leads-menu slds-hide">
+                        <h2 class="slds-text-heading_small">Saved Leads</h2>
                     </div>
                 </div>
             </div>

@@ -67,6 +67,9 @@ export default class ContactsMap extends LightningElement {
     const list = this.template.querySelector(".list");
     const filterMenu = this.template.querySelector(".filter-menu");
     const areaMenu = this.template.querySelector(".area-menu");
+    const savedContactsMenu = this.template.querySelector(
+      ".saved-contacts-menu"
+    );
 
     // Set the initial heights of the other elements to match the height of the lightning-map component
     if (info) info.style.height = `${map.offsetHeight}px`;
@@ -74,6 +77,8 @@ export default class ContactsMap extends LightningElement {
     if (list) list.style.height = `${map.offsetHeight}px`;
     if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
     if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
+    if (savedContactsMenu)
+      savedContactsMenu.style.height = `${map.offsetHeight}px`;
 
     // Add an event listener to the window object to detect changes to the height of the lightning-map component
     window.addEventListener("resize", () => {
@@ -83,6 +88,8 @@ export default class ContactsMap extends LightningElement {
       if (list) list.style.height = `${map.offsetHeight}px`;
       if (filterMenu) filterMenu.style.height = `${map.offsetHeight}px`;
       if (areaMenu) areaMenu.style.height = `${map.offsetHeight}px`;
+      if (savedContactsMenu)
+        savedContactsMenu.style.height = `${map.offsetHeight}px`;
     });
   }
 
@@ -109,11 +116,13 @@ export default class ContactsMap extends LightningElement {
 
   // On click function for the filter button
   menu1Button() {
-    let areaMenu = this.template.querySelector(".area-menu");
     let filterMenu = this.template.querySelector(".filter-menu");
+    let areaMenu = this.template.querySelector(".area-menu");
+    let savedContactsMenu = this.template.querySelector(".saved-contacts-menu");
 
     if (filterMenu.classList.contains("slds-hide")) {
       areaMenu.classList.add("slds-hide");
+      savedContactsMenu.classList.add("slds-hide");
       filterMenu.classList.remove("slds-hide");
     } else {
       filterMenu.classList.add("slds-hide");
@@ -121,14 +130,30 @@ export default class ContactsMap extends LightningElement {
   }
   // On click function for the area button
   menu2Button() {
-    let areaMenu = this.template.querySelector(".area-menu");
     let filterMenu = this.template.querySelector(".filter-menu");
+    let areaMenu = this.template.querySelector(".area-menu");
+    let savedContactsMenu = this.template.querySelector(".saved-contacts-menu");
 
     if (areaMenu.classList.contains("slds-hide")) {
       filterMenu.classList.add("slds-hide");
+      savedContactsMenu.classList.add("slds-hide");
       areaMenu.classList.remove("slds-hide");
     } else {
       areaMenu.classList.add("slds-hide");
+    }
+  }
+  // On click function for the saved contacts button
+  menu3Button() {
+    let filterMenu = this.template.querySelector(".filter-menu");
+    let areaMenu = this.template.querySelector(".area-menu");
+    let savedContactsMenu = this.template.querySelector(".saved-contacts-menu");
+
+    if (savedContactsMenu.classList.contains("slds-hide")) {
+      filterMenu.classList.add("slds-hide");
+      areaMenu.classList.add("slds-hide");
+      savedContactsMenu.classList.remove("slds-hide");
+    } else {
+      savedContactsMenu.classList.add("slds-hide");
     }
   }
 

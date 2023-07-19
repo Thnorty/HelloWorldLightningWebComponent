@@ -31,12 +31,7 @@
     width: 40px;
     height: 40px;
 }
-.area-menu {
-    background: linear-gradient(to right, #ffffff 0%, #d8dde6 100%);
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-.filter-menu {
+.filter-menu, .area-menu, .saved-contacts-menu {
     background: linear-gradient(to right, #ffffff 0%, #d8dde6 100%);
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
