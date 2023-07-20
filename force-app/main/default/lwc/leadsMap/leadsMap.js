@@ -262,6 +262,35 @@ export default class LeadsMap extends LightningElement {
     this.updateMarkerInfo(this.selectedMarkerValue);
   }
 
+  // On mouse enter function for the list elements
+  handleListElementMouseEnter(event) {
+    const value = event.currentTarget.getAttribute("data-id");
+    const favoriteButtons = this.template.querySelectorAll(".favorite-button");
+
+    for (let i = 0; i < favoriteButtons.length; i++) {
+      if (favoriteButtons[i].getAttribute("data-id") === value) {
+        favoriteButtons[i].classList.remove("slds-hide");
+        break;
+      }
+    }
+  }
+
+  // On mouse leave function for the list elements
+  handleListElementMouseLeave(event) {
+    const value = event.currentTarget.getAttribute("data-id");
+    const favoriteButtons = this.template.querySelectorAll(".favorite-button");
+
+    for (let i = 0; i < favoriteButtons.length; i++) {
+      if (
+        favoriteButtons[i].getAttribute("data-id") === value &&
+        favoriteButtons[i].iconName === "utility:favorite_alt"
+      ) {
+        favoriteButtons[i].classList.add("slds-hide");
+        break;
+      }
+    }
+  }
+
   // On click function for the favorite button
   handleFavoriteClick(event) {
     event.stopPropagation();

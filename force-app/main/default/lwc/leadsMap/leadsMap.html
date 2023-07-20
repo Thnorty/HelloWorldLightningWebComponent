@@ -25,7 +25,7 @@
                     <div class="slds-col slds-size_1-of-4 slds-var-m-right_medium">
                         <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-4 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
-                                <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal slds-var-p-around_xx-small list-element" data-id={mapMarker.value} onclick={handleListElementClick}>
+                                <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-list_horizontal slds-var-p-around_xx-small list-element" data-id={mapMarker.value} onclick={handleListElementClick} onmouseenter={handleListElementMouseEnter} onmouseleave={handleListElementMouseLeave}>
                                     <div class="list-element-icon">
                                         <span class="slds-is-absolute">
                                             <img src={mapMarker.photoUrl} alt="Profile Picture" width="40" height="40" />
@@ -35,7 +35,7 @@
                                         </svg>
                                     </div>
                                     <p class="slds-var-m-left_medium" style="font-size: large;">{mapMarker.name}</p>
-                                    <lightning-button-icon data-id={mapMarker.value} icon-name="utility:favorite_alt" size="large" alternative-text="Favorite" variant="bare" onclick={handleFavoriteClick} style="margin-left: auto;">
+                                    <lightning-button-icon class="favorite-button slds-hide" data-id={mapMarker.value} icon-name="utility:favorite_alt" size="large" alternative-text="Favorite" variant="bare" onclick={handleFavoriteClick} style="margin-left: auto;">
                                         <label>Favorite</label>
                                     </lightning-button-icon>
                                 </div>
