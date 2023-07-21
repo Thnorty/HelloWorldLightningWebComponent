@@ -298,11 +298,12 @@ export default class LeadsMap extends LightningElement {
     const button = event.currentTarget;
     const value = button.getAttribute("data-id");
     const name = value.split(" - ")[0];
+    const id = value.split(" - ")[3];
 
     if (button.iconName === "utility:favorite_alt") {
-      this.favoriteLeads.push(name);
+      this.favoriteLeads.push({ name: name, id: id });
     } else {
-      this.favoriteLeads = this.favoriteLeads.filter((id) => id !== name);
+      this.favoriteLeads = this.favoriteLeads.filter((lead) => lead.id !== id);
     }
 
     button.iconName =
@@ -415,7 +416,8 @@ export default class LeadsMap extends LightningElement {
           State: lead.State || " ",
           Street: lead.Street || " "
         },
-        value: lead.Name + " - " + lead.Email + " - " + lead.Phone,
+        value:
+          lead.Name + " - " + lead.Email + " - " + lead.Phone + " - " + lead.Id,
         name: lead.Name,
         photoUrl: lead.PhotoUrl,
         mapIcon: {
@@ -426,8 +428,7 @@ export default class LeadsMap extends LightningElement {
           strokeOpacity: 1,
           strokeWeight: 1,
           scale: 0.1
-        },
-        id: lead.Id
+        }
       }));
 
     const noItemPage = this.template.querySelector(".no-item-page");

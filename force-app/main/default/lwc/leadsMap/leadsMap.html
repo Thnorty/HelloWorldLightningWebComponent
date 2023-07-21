@@ -10,7 +10,7 @@
                         <label>Select area</label>
                     </lightning-button-icon>
                     <lightning-button-icon class="slds-col slds-var-m-around_small" icon-name="utility:bookmark_alt" alternative-text="Saved leads" variant="border" onclick={menu3Button}>
-                        <label>Saved contacts</label>
+                        <label>Saved leads</label>
                     </lightning-button-icon>
                 </div>
                 <div class="slds-grid slds-col">
@@ -101,11 +101,14 @@
                     </div>
                     <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium favorite-leads-menu slds-hide">
                         <h2 class="slds-text-heading_small">Favorite Leads</h2>
-                        <template for:each={favoriteLeads} for:item="favoriteLead">
-                            <div key={favoriteLead}>
-                                <p>{favoriteLead}</p>
-                            </div>
-                        </template>
+                        <br>
+                        <ul class="slds-has-dividers_around-space">
+                            <template for:each={favoriteLeads} for:item="favoriteLead">
+                                <li key={favoriteLead.id} class="slds-item">
+                                    <p>{favoriteLead.name}</p>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
                 </div>
             </div>

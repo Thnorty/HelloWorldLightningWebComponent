@@ -261,11 +261,14 @@ export default class ContactsMap extends LightningElement {
     const button = event.currentTarget;
     const value = button.getAttribute("data-id");
     const name = value.split(" - ")[0];
+    const id = value.split(" - ")[3];
 
     if (button.iconName === "utility:favorite_alt") {
-      this.favoriteContacts.push(name);
+      this.favoriteContacts.push({ name: name, id: id });
     } else {
-      this.favoriteContacts = this.favoriteContacts.filter((id) => id !== name);
+      this.favoriteContacts = this.favoriteContacts.filter(
+        (contact) => contact.id !== id
+      );
     }
 
     button.iconName =
@@ -342,7 +345,14 @@ export default class ContactsMap extends LightningElement {
           State: contact.MailingState || " ",
           Street: contact.MailingStreet || " "
         },
-        value: contact.Name + " - " + contact.Email + " - " + contact.Phone,
+        value:
+          contact.Name +
+          " - " +
+          contact.Email +
+          " - " +
+          contact.Phone +
+          " - " +
+          contact.Id,
         name: contact.Name,
         photoUrl: contact.PhotoUrl,
         mapIcon: {
@@ -353,8 +363,7 @@ export default class ContactsMap extends LightningElement {
           strokeOpacity: 1,
           strokeWeight: 1,
           scale: 0.1
-        },
-        id: contact.Id
+        }
       }));
 
     const noItemPage = this.template.querySelector(".no-item-page");

@@ -33,7 +33,7 @@
     height: 40px;
 }
 .filter-menu, .area-menu, .favorite-leads-menu {
-    background: linear-gradient(to right, #ffffff 0%, #d8dde6 100%);
+    background-color: #fff;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }

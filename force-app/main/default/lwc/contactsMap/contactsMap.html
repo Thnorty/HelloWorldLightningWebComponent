@@ -25,7 +25,7 @@
                     <div class="slds-col slds-size_1-of-4 slds-var-m-right_medium">
                         <div class="slds-grid slds-grid_vertical slds-box slds-size_1-of-4 slds-scrollable_y slds-is-absolute list">
                             <template for:each={mapMarkers} for:item="mapMarker">
-                                <div key={mapMarker.id} class="slds-grid slds-col slds-media_center slds-var-p-around_xx-small list-element" data-id={mapMarker.value} onclick={handleListElementClick} onmouseenter={handleListElementMouseEnter} onmouseleave={handleListElementMouseLeave}>
+                                <div key={mapMarker.value} class="slds-grid slds-col slds-media_center slds-var-p-around_xx-small list-element" data-id={mapMarker.value} onclick={handleListElementClick} onmouseenter={handleListElementMouseEnter} onmouseleave={handleListElementMouseLeave}>
                                     <div class="list-element-icon">
                                         <span class="slds-is-absolute">
                                             <img src={mapMarker.photoUrl} alt="Profile Picture" width="40" height="40" />
@@ -97,11 +97,14 @@
                     </div>
                     <div class="slds-grid_vertical slds-col slds-size_1-of-6 slds-scrollable_y slds-is-absolute slds-var-p-around_medium favorite-contacts-menu slds-hide">
                         <h2 class="slds-text-heading_small">Favorite Contacts</h2>
-                        <template for:each={favoriteContacts} for:item="favoriteContact">
-                            <div key={favoriteContact}>
-                                <p>{favoriteContact}</p>
-                            </div>
-                        </template>
+                        <br>
+                        <ul class="slds-has-dividers_around-space">
+                            <template for:each={favoriteContacts} for:item="favoriteContact">
+                                <li key={favoriteContact.id} class="slds-item">
+                                    <p>{favoriteContact.name}</p>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
                 </div>
             </div>
